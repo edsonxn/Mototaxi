@@ -1,0 +1,30 @@
+# Archivos de datos (opcionales - pueden incluirse si quieres datos de ejemplo)
+# choferes.json
+# registros.json
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de editor
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Backups automáticos
+*backup*
+*_backup*
+
+# Archivos de desarrollo
+.vscode/
+.idea/
+
+# Archivos de Windows
+desktop.ini
