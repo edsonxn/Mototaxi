@@ -2,6 +2,10 @@
 # choferes.json
 # registros.json
 
+# Archivos de autenticación (sensibles)
+api/sessions/
+*.session
+
 # Archivos del sistema
 .DS_Store
 Thumbs.db

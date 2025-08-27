@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Mototaxis - Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .login-form {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
+
+        .form-group input {
+            padding-left: 50px;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .message.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .message.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.info {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-container {
+                border-radius: 15px;
+            }
+            
+            .login-header, .login-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-motorcycle"></i>
+            </div>
+            <h1>Control Mototaxis</h1>
+            <p>Ingresa tus credenciales para continuar</p>
+        </div>
+        
+        <form class="login-form" id="login-form">
+            <div id="error-message" class="message error" style="display: none;"></div>
+            <div id="success-message" class="message success" style="display: none;"></div>
+            
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <div style="position: relative;">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div style="position: relative;">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+            </div>
+            
+            <button type="submit" class="login-btn" id="login-btn">
+                Iniciar Sesión
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner"></i>
+                </div>
+            </button>
+        </form>
+        
+        <div class="footer">
+            Sistema de Control v1.0.0
+        </div>
+    </div>
+
+    <script>
+        // Configuración de la API
+        const API_BASE = './api/';
+        
+        // Función para mostrar mensajes
+        function showMessage(message, type = 'error') {
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            
+            if (type === 'error') {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            } else if (type === 'success') {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+            } else if (type === 'info') {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                errorDiv.className = 'message info';
+                successDiv.style.display = 'none';
+            }
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+                errorDiv.className = 'message error';
+            }, 5000);
+        }
+
+        // Función para realizar llamadas a la API
+        async function apiCall(endpoint, options = {}) {
+            const url = API_BASE + endpoint;
+            console.log('🔗 Haciendo petición a:', url);
+            console.log('📤 Opciones enviadas:', options);
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response headers:', Object.fromEntries(response.headers));
+                
+                // Verificar si la respuesta es JSON válida
+                const contentType = response.headers.get('content-type');
+                console.log('📄 Content-Type:', contentType);
+                
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('❌ Respuesta no es JSON:', text);
+                    throw new Error(`Servidor devolvió HTML/texto en lugar de JSON. Posible error de PHP: ${text.substring(0, 200)}...`);
+                }
+
+                const data = await response.json();
+                console.log('📥 Response data:', data);
+
+                if (!response.ok) {
+                    throw new Error(data.message || `Error HTTP: ${response.status}`);
+                }
+
+                return data;
+            } catch (error) {
+                console.error('❌ API Error completo:', error);
+                
+                if (error.name === 'SyntaxError' && error.message.includes('JSON')) {
+                    throw new Error('Error del servidor: La respuesta no es JSON válido. Verifique que los archivos PHP estén funcionando correctamente.');
+                }
+                
+                throw error;
+            }
+        }
+
+        // Manejar el formulario de login
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const btnLogin = document.getElementById('login-btn');
+            const loading = document.getElementById('loading');
+            
+            if (!username || !password) {
+                showMessage('Por favor, completa todos los campos');
+                return;
+            }
+            
+            // Mostrar loading
+            btnLogin.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                const response = await apiCall('auth-simple.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'login',
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                if (response.success) {
+                    showMessage('Login exitoso. Redirigiendo...', 'success');
+                    
+                    // Guardar token y datos de usuario en localStorage
+                    localStorage.setItem('session_token', response.token);
+                    localStorage.setItem('user_data', JSON.stringify(response.user));
+                    
+                    // Redirigir después de 1 segundo
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                } else {
+                    showMessage(response.message || 'Error en el login');
+                }
+                
+            } catch (error) {
+                showMessage(`Error de conexión: ${error.message}`);
+            } finally {
+                btnLogin.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        // Auto-redirect si ya hay una sesión activa (opcional)
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('session_token');
+            if (token) {
+                // Verificar si el token es válido antes de redirigir
+                // Pero solo si no venimos de una redirección de index.html
+                const urlParams = new URLSearchParams(window.location.search);
+                if (!urlParams.has('from')) {
+                    apiCall('auth-simple.php?action=verify', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then(response => {
+                        if (response.success) {
+                            window.location.href = 'index.html';
+                        }
+                    }).catch(() => {
+                        // Token inválido, remover
+                        localStorage.removeItem('session_token');
+                        localStorage.removeItem('user_data');
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

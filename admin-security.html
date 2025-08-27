@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Seguridad - Control de Mototaxis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #4ECDC4;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4ECDC4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .users-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4ECDC4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Administración de Seguridad</h1>
+            <p>Gestión de contraseñas y usuarios del sistema</p>
+        </div>
+        
+        <div class="content">
+            <a href="index.html" class="back-link">← Volver al Sistema Principal</a>
+            
+            <div class="warning">
+                <strong>⚠️ Atención:</strong> Esta página debe ser usada solo por administradores. Asegúrese de generar hashes seguros para las contraseñas.
+            </div>
+
+            <!-- Generador de Hash -->
+            <div class="section">
+                <h2>🔑 Generar Hash de Contraseña</h2>
+                <p>Usa esta herramienta para generar hashes seguros bcrypt de las contraseñas.</p>
+                
+                <div class="form-group">
+                    <label for="passwordToHash">Contraseña a hashear:</label>
+                    <input type="password" id="passwordToHash" placeholder="Ingrese la contraseña">
+                </div>
+                
+                <button class="btn" onclick="generateHash()">Generar Hash</button>
+                
+                <div id="hashResult"></div>
+            </div>
+
+            <!-- Actualizar Usuario -->
+            <div class="section">
+                <h2>👤 Actualizar Contraseña de Usuario</h2>
+                <p>Actualiza la contraseña hasheada de un usuario existente.</p>
+                
+                <div class="form-group">
+                    <label for="username">Usuario:</label>
+                    <select id="username">
+                        <option value="">Seleccione un usuario...</option>
+                        <option value="admin">admin</option>
+                        <option value="operador">operador</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">Nueva Contraseña:</label>
+                    <input type="password" id="newPassword" placeholder="Nueva contraseña">
+                </div>
+                
+                <button class="btn" onclick="updateUserPassword()">Actualizar Contraseña</button>
+                
+                <div id="updateResult"></div>
+            </div>
+
+            <!-- Crear Nuevo Usuario -->
+            <div class="section">
+                <h2>➕ Crear Nuevo Usuario</h2>
+                <p>Crea un nuevo usuario en el sistema con credenciales seguras.</p>
+                
+                <div class="form-group">
+                    <label for="newUsername">Nombre de Usuario:</label>
+                    <input type="text" id="newUsername" placeholder="ej: operador2">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newUserFullName">Nombre Completo:</label>
+                    <input type="text" id="newUserFullName" placeholder="ej: Juan Pérez">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newUserRole">Rol:</label>
+                    <select id="newUserRole">
+                        <option value="">Seleccione un rol...</option>
+                        <option value="admin">Administrador</option>
+                        <option value="operador">Operador</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newUserPassword">Contraseña:</label>
+                    <input type="password" id="newUserPassword" placeholder="Contraseña segura">
+                </div>
+                
+                <button class="btn" onclick="createUser()">Crear Usuario</button>
+                
+                <div id="createUserResult"></div>
+            </div>
+
+            <!-- Lista de Usuarios -->
+            <div class="section">
+                <h2>📋 Usuarios del Sistema</h2>
+                <button class="btn" onclick="loadUsers()">Cargar Usuarios</button>
+                
+                <div id="usersList"></div>
+            </div>
+
+            <!-- Herramienta de Verificación -->
+            <div class="section">
+                <h2>🔍 Verificar Contraseña</h2>
+                <p>Verifica si una contraseña coincide con un hash existente.</p>
+                
+                <div class="form-group">
+                    <label for="testPassword">Contraseña a verificar:</label>
+                    <input type="password" id="testPassword" placeholder="Contraseña">
+                </div>
+                
+                <div class="form-group">
+                    <label for="testHash">Hash a comparar:</label>
+                    <input type="text" id="testHash" placeholder="Hash bcrypt">
+                </div>
+                
+                <button class="btn" onclick="verifyPassword()">Verificar</button>
+                
+                <div id="verifyResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para realizar llamadas API con autenticación
+        async function apiCall(endpoint, options = {}) {
+            const token = localStorage.getItem('session_token');
+            
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+            
+            const finalOptions = {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...options.headers
+                }
+            };
+            
+            try {
+                const response = await fetch(endpoint, finalOptions);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Error en la petición');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error en API call:', error);
+                throw error;
+            }
+        }
+
+        // Generar hash de contraseña
+        async function generateHash() {
+            const password = document.getElementById('passwordToHash').value;
+            
+            if (!password) {
+                showResult('hashResult', 'Por favor ingrese una contraseña', 'error');
+                return;
+            }
+            
+            try {
+                const response = await apiCall('api/security.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'generate_hash',
+                        password: password
+                    })
+                });
+                
+                showResult('hashResult', `Hash generado: ${response.hash}`, 'success');
+            } catch (error) {
+                showResult('hashResult', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Actualizar contraseña de usuario
+        async function updateUserPassword() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('newPassword').value;
+            
+            if (!username || !password) {
+                showResult('updateResult', 'Seleccione un usuario e ingrese una contraseña', 'error');
+                return;
+            }
+            
+            try {
+                const response = await apiCall('api/security.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'update_password',
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                showResult('updateResult', response.message, 'success');
+                document.getElementById('newPassword').value = '';
+                loadUsers(); // Recargar la lista
+            } catch (error) {
+                showResult('updateResult', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Crear nuevo usuario
+        async function createUser() {
+            const username = document.getElementById('newUsername').value.trim();
+            const fullName = document.getElementById('newUserFullName').value.trim();
+            const role = document.getElementById('newUserRole').value;
+            const password = document.getElementById('newUserPassword').value;
+            
+            if (!username || !fullName || !role || !password) {
+                showResult('createUserResult', 'Todos los campos son obligatorios', 'error');
+                return;
+            }
+            
+            // Validar nombre de usuario (solo letras, números y guiones)
+            if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+                showResult('createUserResult', 'El nombre de usuario solo puede contener letras, números, guiones y guiones bajos', 'error');
+                return;
+            }
+            
+            // Validar longitud de contraseña
+            if (password.length < 6) {
+                showResult('createUserResult', 'La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
+            try {
+                const response = await apiCall('api/security.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'create_user',
+                        username: username,
+                        name: fullName,
+                        role: role,
+                        password: password
+                    })
+                });
+                
+                showResult('createUserResult', response.message, 'success');
+                
+                // Limpiar formulario
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newUserFullName').value = '';
+                document.getElementById('newUserRole').value = '';
+                document.getElementById('newUserPassword').value = '';
+                
+                // Recargar lista de usuarios y actualizar dropdown
+                loadUsers();
+                updateUserDropdown();
+                
+            } catch (error) {
+                showResult('createUserResult', `Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Actualizar dropdown de usuarios en la sección de actualizar contraseña
+        async function updateUserDropdown() {
+            try {
+                const response = await apiCall('api/security.php?action=list_users');
+                const select = document.getElementById('username');
+                
+                // Limpiar opciones existentes excepto la primera
+                select.innerHTML = '<option value="">Seleccione un usuario...</option>';
+                
+                // Agregar usuarios dinámicamente
+                response.users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.username;
+                    option.textContent = `${user.username} (${user.name})`;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error actualizando dropdown:', error);
+            }
+        }
+
+        // Cargar lista de usuarios
+        async function loadUsers() {
+            try {
+                const response = await apiCall('api/security.php?action=list_users');
+                
+                let html = '<table class="users-table">';
+                html += '<tr><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Estado</th><th>Último Login</th></tr>';
+                
+                response.users.forEach(user => {
+                    html += `<tr>
+                        <td>${user.username}</td>
+                        <td>${user.name}</td>
+                        <td>${user.role}</td>
+                        <td>${user.active ? 'Activo' : 'Inactivo'}</td>
+                        <td>${user.last_login || 'Nunca'}</td>
+                    </tr>`;
+                });
+                
+                html += '</table>';
+                document.getElementById('usersList').innerHTML = html;
+            } catch (error) {
+                showResult('usersList', `Error cargando usuarios: ${error.message}`, 'error');
+            }
+        }
+
+        // Verificar contraseña
+        async function verifyPassword() {
+            const password = document.getElementById('testPassword').value;
+            const hash = document.getElementById('testHash').value;
+            
+            if (!password || !hash) {
+                showResult('verifyResult', 'Ingrese tanto la contraseña como el hash', 'error');
+                return;
+            }
+            
+            try {
+                const response = await apiCall('api/security.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'verify_password',
+                        password: password,
+                        hash: hash
+                    })
+                });
+                
+                const message = response.valid ? 
+                    'La contraseña coincide con el hash ✓' : 
+                    'La contraseña NO coincide con el hash ✗';
+                    
+                showResult('verifyResult', message, response.valid ? 'success' : 'error');
+            } catch (error) {
+                showResult('verifyResult', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Mostrar resultado
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        // Verificar autenticación al cargar
+        window.addEventListener('load', async function() {
+            try {
+                const token = localStorage.getItem('session_token');
+                if (!token) {
+                    throw new Error('No hay token');
+                }
+                
+                const response = await fetch('api/auth-simple.php?action=verify', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success || data.user.role !== 'admin') {
+                    throw new Error('No autorizado');
+                }
+                
+                console.log('Autenticación exitosa para admin');
+                
+                // Inicializar dropdown de usuarios
+                updateUserDropdown();
+                
+            } catch (error) {
+                alert('Debe iniciar sesión como administrador para acceder a esta página');
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

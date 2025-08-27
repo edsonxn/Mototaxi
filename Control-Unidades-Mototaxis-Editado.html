@@ -18,313 +18,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js">
     </script>
     <style>
-        /* Variables CSS para temas */
-        :root {
-            --bg-primary: #f0f4f8;
-            --bg-secondary: #ffffff;
-            --bg-header: #1d4ed8;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #111827;
-            --bg-secondary: #1f2937;
-            --bg-header: #0f172a;
-            --text-primary: #f9fafb;
-            --text-secondary: #d1d5db;
-            --border-color: #374151;
-            --shadow: rgba(0, 0, 0, 0.3);
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Actualizar estilos para usar variables */
-        .bg-white {
-            background-color: var(--bg-secondary) !important;
-        }
-
-        .text-gray-800 {
-            color: var(--text-primary) !important;
-        }
-
-        .text-gray-700 {
-            color: var(--text-secondary) !important;
-        }
-
-        .border-gray-200 {
-            border-color: var(--border-color) !important;
-        }
-
-        .border-gray-300 {
-            border-color: var(--border-color) !important;
-        }
-
-        .shadow-lg {
-            box-shadow: 0 10px 15px -3px var(--shadow), 0 4px 6px -4px var(--shadow) !important;
-        }
-
-        /* Estilos para inputs y formularios en modo oscuro */
-        [data-theme="dark"] input,
-        [data-theme="dark"] select,
-        [data-theme="dark"] textarea {
-            background-color: #374151;
-            border-color: #4b5563;
-            color: #f9fafb;
-        }
-
-        [data-theme="dark"] input:focus,
-        [data-theme="dark"] select:focus,
-        [data-theme="dark"] textarea:focus {
-            border-color: #3b82f6;
-            background-color: #4b5563;
-        }
-
-        /* Estilos para tablas en modo oscuro */
-        [data-theme="dark"] table {
-            background-color: var(--bg-secondary);
-        }
-
-        [data-theme="dark"] th {
-            background-color: #374151;
-            color: #f9fafb;
-        }
-
-        [data-theme="dark"] td {
-            border-color: var(--border-color);
-        }
-
-        [data-theme="dark"] tr:nth-child(even) {
-            background-color: #374151;
-        }
-
-        /* Actualizar header para tema oscuro */
-        [data-theme="dark"] header {
-            background-color: var(--bg-header) !important;
-        }
-
-        /* Badges y estados en modo oscuro */
-        [data-theme="dark"] .badge-completo {
-            background-color: #065f46;
-            color: #d1fae5;
-        }
-
-        [data-theme="dark"] .badge-incompleto {
-            background-color: #92400e;
-            color: #fef3c7;
-        }
-
-        [data-theme="dark"] .badge-sin-registro {
-            background-color: #4b5563;
-            color: #d1d5db;
-        }
-
-        /* Botones en modo oscuro */
-        [data-theme="dark"] .bg-blue-600 {
-            background-color: #1e40af !important;
-        }
-
-        [data-theme="dark"] .bg-green-600 {
-            background-color: #059669 !important;
-        }
-
-        [data-theme="dark"] .bg-red-600 {
-            background-color: #dc2626 !important;
-        }
-
-        [data-theme="dark"] .bg-gray-500 {
-            background-color: #6b7280 !important;
-        }
-
-        /* Hover states para botones en modo oscuro */
-        [data-theme="dark"] .hover\:bg-blue-700:hover {
-            background-color: #1d4ed8 !important;
-        }
-
-        [data-theme="dark"] .hover\:bg-green-700:hover {
-            background-color: #047857 !important;
-        }
-
-        [data-theme="dark"] .hover\:bg-red-700:hover {
-            background-color: #b91c1c !important;
-        }
-
-        [data-theme="dark"] .hover\:bg-gray-600:hover {
-            background-color: #4b5563 !important;
-        }
-
-        /* Gradiente de fondo en modo oscuro */
-        [data-theme="dark"] #main-container {
-            background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
-        }
-
-        /* Estilos específicos para el panel de resumen en modo oscuro */
-        [data-theme="dark"] .bg-gray-100 {
-            background-color: #374151 !important;
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] .bg-gray-100 p {
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] .bg-gray-100 span {
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] .bg-gray-100 .font-semibold {
-            color: #ffffff !important;
-        }
-
-        /* Resumen específico en control panel */
-        [data-theme="dark"] div[class*="bg-gray-100"] {
-            background-color: #374151 !important;
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] div[class*="bg-gray-100"] * {
-            color: #ffffff !important;
-        }
-
-        /* Selector super específico para el div de resumen */
-        [data-theme="dark"] .p-3.bg-gray-100.rounded-lg {
-            background-color: #374151 !important;
-            border: 1px solid #4b5563 !important;
-        }
-
-        [data-theme="dark"] .p-3.bg-gray-100.rounded-lg p,
-        [data-theme="dark"] .p-3.bg-gray-100.rounded-lg span,
-        [data-theme="dark"] .p-3.bg-gray-100.rounded-lg label {
-            color: #ffffff !important;
-        }
-
-        /* Estilos ultra específicos para el panel de control */
-        [data-theme="dark"] #content-control .bg-gray-100 {
-            background-color: #374151 !important;
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] #content-control .bg-gray-100 * {
-            color: #ffffff !important;
-        }
-
-        /* Forzar estilos para cualquier elemento bg-gray-100 en tema oscuro */
-        [data-theme="dark"] *[class*="bg-gray-100"] {
-            background-color: #374151 !important;
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] *[class*="bg-gray-100"] * {
-            color: #ffffff !important;
-        }
-
-        /* Estilos para operadores seleccionados en tema oscuro */
-        [data-theme="dark"] .bg-blue-50 {
-            background-color: #1e3a8a !important;
-            border-color: #3b82f6 !important;
-        }
-
-        [data-theme="dark"] .border-blue-200 {
-            border-color: #3b82f6 !important;
-        }
-
-        [data-theme="dark"] .bg-blue-50 span {
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] .bg-blue-50 button {
-            color: #d1d5db !important;
-        }
-
-        [data-theme="dark"] .bg-blue-50 button:hover {
-            color: #ef4444 !important;
-        }
-
-        /* Selectores muy específicos para el resumen */
-        body[data-theme="dark"] .bg-gray-100 {
-            background-color: #374151 !important;
-            color: #ffffff !important;
-            border: 1px solid #4b5563 !important;
-        }
-
-        body[data-theme="dark"] .bg-gray-100 p {
-            color: #ffffff !important;
-        }
-
-        body[data-theme="dark"] .bg-gray-100 span {
-            color: #ffffff !important;
-        }
-
-        body[data-theme="dark"] .bg-gray-100 label {
-            color: #ffffff !important;
-        }
-
-        body[data-theme="dark"] .bg-gray-100 .font-semibold {
-            color: #ffffff !important;
-        }
-
-        /* Override para Tailwind específico */
-        body[data-theme="dark"] .p-3.bg-gray-100.rounded-lg {
-            background: #374151 !important;
-            color: white !important;
-        }
-
-        body[data-theme="dark"] .p-3.bg-gray-100.rounded-lg > * {
-            color: white !important;
-        }
-
-        [data-theme="dark"] .text-gray-700 {
-            color: #d1d5db !important;
-        }
-
-        [data-theme="dark"] .text-gray-500 {
-            color: #9ca3af !important;
-        }
-
-        /* Estilos para labels en modo oscuro */
-        [data-theme="dark"] label {
-            color: #d1d5db !important;
-        }
-
-        /* Checkboxes en modo oscuro */
-        [data-theme="dark"] input[type="checkbox"] {
-            background-color: #374151;
-            border-color: #4b5563;
-        }
-
-        [data-theme="dark"] input[type="checkbox"]:checked {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-        }
-
-        /* Cards y elementos de resumen en modo oscuro */
-        [data-theme="dark"] .bg-white {
-            background-color: #1f2937 !important;
-        }
-
-        [data-theme="dark"] .border-gray-200 {
-            border-color: #374151 !important;
-        }
-
-        [data-theme="dark"] .text-black {
-            color: #f3f4f6 !important;
-        }
-
-        /* Elementos específicos del panel de control */
-        [data-theme="dark"] .control-panel .bg-gray-100 {
-            background-color: #374151 !important;
-            border: 1px solid #4b5563;
-        }
-
-        [data-theme="dark"] .control-panel h3 {
-            color: #f3f4f6 !important;
+            background-color: #f0f4f8;
         }
 
         .tab-active {
@@ -424,232 +120,6 @@
 
         .btn-add:hover {
             background-color: #059669;
-        }
-
-        /* Estilos responsivos */
-        .mobile-menu-button {
-            display: none;
-        }
-
-        .mobile-menu {
-            display: none;
-        }
-
-        .hamburger-icon {
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .hamburger-icon.active {
-            transform: rotate(90deg);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-button {
-                display: block !important;
-            }
-
-            .desktop-menu {
-                display: none !important;
-            }
-
-            /* Forzar ocultamiento del menú desktop */
-            div.desktop-menu.flex.mb-6.border-b.border-gray-200 {
-                display: none !important;
-                visibility: hidden !important;
-                opacity: 0 !important;
-                height: 0 !important;
-                overflow: hidden !important;
-            }
-
-            .mobile-menu {
-                display: block;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: white;
-                border-top: 1px solid #e5e7eb;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                z-index: 50;
-            }
-
-            .mobile-menu.hidden {
-                display: none;
-            }
-
-            .mobile-menu button {
-                display: block;
-                width: 100%;
-                text-align: left;
-                padding: 12px 16px;
-                border-bottom: 1px solid #e5e7eb;
-                background-color: white;
-                color: #374151;
-                font-weight: 500;
-                transition: background-color 0.2s;
-            }
-
-            .mobile-menu button:hover {
-                background-color: #f3f4f6;
-            }
-
-            .mobile-menu button.tab-active {
-                background-color: #3b82f6;
-                color: white;
-            }
-
-            .container {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
-            /* Hacer las tablas horizontalmente scrollables en móvil */
-            .table-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .table-container table {
-                min-width: 600px;
-            }
-
-            /* Ajustar formularios en móvil */
-            .flex.flex-wrap.gap-4 {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .flex.flex-wrap.gap-4 > div {
-                flex: 1;
-                min-width: 100%;
-            }
-
-            /* Ajustar grid en móvil */
-            .grid.grid-cols-1.md\\:grid-cols-2.gap-6 {
-                grid-template-columns: 1fr;
-            }
-
-            /* Ajustar padding en móvil */
-            .p-6 {
-                padding: 1rem;
-            }
-
-            .px-6 {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
-            /* Hacer botones más grandes en móvil */
-            button {
-                min-height: 44px;
-                padding: 0.75rem 1rem;
-            }
-
-            /* Hacer inputs más grandes en móvil */
-            input, select, textarea {
-                min-height: 44px;
-                font-size: 16px; /* Previene zoom en iOS */
-            }
-
-            /* Ajustar texto en móvil */
-            .text-2xl {
-                font-size: 1.5rem;
-            }
-
-            .text-xl {
-                font-size: 1.25rem;
-            }
-
-            /* Mejorar botones pequeños en móvil */
-            .btn-icon {
-                min-width: 44px;
-                min-height: 44px;
-            }
-
-            /* Hacer responsivos los botones de acción */
-            .flex.justify-end.space-x-4 {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.75rem;
-            }
-
-            .flex.justify-end.space-x-4 button {
-                width: 100%;
-                margin-left: 0;
-                padding: 0.75rem 1rem;
-                font-size: 0.875rem;
-                text-align: center;
-            }
-
-            /* Hacer responsivos otros grupos de botones */
-            .flex.space-x-2 {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .flex.space-x-2 button {
-                width: 100%;
-                margin-left: 0;
-            }
-
-            /* Hacer responsivos los botones de exportar */
-            .flex.space-x-2.mb-4 {
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            .flex.space-x-2.mb-4 button {
-                flex: 1;
-                min-width: calc(50% - 0.25rem);
-            }
-
-            /* Asegurar que el menú desktop esté completamente oculto */
-            .desktop-menu,
-            div[class*="desktop-menu"] {
-                display: none !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-
-            .p-6 {
-                padding: 0.75rem;
-            }
-
-            .text-2xl {
-                font-size: 1.25rem;
-            }
-
-            .flex.gap-4 {
-                gap: 0.5rem;
-            }
-
-            /* Botones más compactos en pantallas muy pequeñas */
-            .flex.justify-end.space-x-4 button {
-                padding: 0.625rem 0.75rem;
-                font-size: 0.8rem;
-            }
-
-            /* Hacer formularios de una sola columna */
-            .grid.grid-cols-1.md\\:grid-cols-2.gap-6 {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            /* En pantallas muy pequeñas, hacer todos los botones apilados */
-            .flex.space-x-2.mb-4 {
-                flex-direction: column;
-            }
-
-            .flex.space-x-2.mb-4 button {
-                width: 100%;
-                min-width: auto;
-            }
         }
     </style>
     <style>
@@ -1514,65 +984,26 @@
 </head>
 
 <body>
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 transition-colors duration-300" id="main-container">
-        <header class="bg-blue-700 text-white shadow-lg relative">
-            <div class="container mx-auto px-4 py-4">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold">
-                        Sistema de Control de Unidades
-                    </h1>
-                    <div class="flex items-center gap-2">
-                        <!-- Información de usuario -->
-                        <div class="hidden md:flex items-center text-white mr-4">
-                            <i class="fas fa-user mr-2"></i>
-                            <span id="user-name">Usuario</span>
-                        </div>
-                        <!-- Botón de administración (solo para admins) -->
-                        <button class="hidden text-white bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 mr-2" id="admin-btn" title="Panel de Administración">
-                            <i class="fas fa-cog mr-1"></i>
-                            <span class="hidden lg:inline">Admin</span>
-                        </button>
-                        <!-- Botón de logout -->
-                        <button class="text-white hover:text-red-300 focus:outline-none transition-colors duration-200" id="logout-button" title="Cerrar sesión">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
-                        <!-- Botón de cambio de tema -->
-                        <button class="text-white hover:text-yellow-300 focus:outline-none transition-colors duration-200" id="theme-toggle" title="Cambiar tema">
-                            <svg class="w-6 h-6" id="theme-icon-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                            <svg class="w-6 h-6 hidden" id="theme-icon-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                            </svg>
-                        </button>
-                        <!-- Botón de menú hamburguesa para móvil -->
-                        <button class="mobile-menu-button text-white focus:outline-none" id="mobile-menu-toggle">
-                            <svg class="w-6 h-6 hamburger-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <!-- Menú móvil -->
-                <div class="mobile-menu hidden" id="mobile-menu">
-                    <button class="tab-active" id="mobile-tab-control">
-                        Control de Turnos
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <header class="bg-blue-700 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold">
+                    Sistema de Control de Unidades
+                </h1>
+                <div class="flex items-center space-x-4">
+                    <span id="user-info" class="text-sm opacity-90"></span>
+                    <button id="admin-btn" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hidden">
+                        <i class="fas fa-cog mr-2"></i>Administración
                     </button>
-                    <button id="mobile-tab-unidades">
-                        Tabla de Unidades
-                    </button>
-                    <button id="mobile-tab-choferes">
-                        Gestión de Operadores
-                    </button>
-                    <button id="mobile-tab-reportes">
-                        Reportes
+                    <button id="logout-btn" class="bg-red-600 hover:bg-red-500 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
                     </button>
                 </div>
             </div>
         </header>
         <div class="container mx-auto px-4 py-6">
-            <!-- Navegación por pestañas (escritorio) -->
-            <div class="desktop-menu flex mb-6 border-b border-gray-200">
+            <!-- Navegación por pestañas -->
+            <div class="flex mb-6 border-b border-gray-200">
                 <button class="px-6 py-3 font-medium tab-active rounded-t-lg" id="tab-control">
                     Control de
                     Turnos
@@ -1598,27 +1029,14 @@
                     <div class="flex flex-wrap gap-4">
                         <form class="w-full flex flex-wrap gap-4" id="form-buscar-unidad">
                             <div class="w-full md:w-64">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Número de Unidad
-                                </label>
                                 <input
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     id="search-unidad" placeholder="Número de unidad (1-150)" type="number" />
                             </div>
-                            <div class="w-full md:w-64">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Fecha
-                                </label>
-                                <input
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="search-fecha" type="date" />
-                            </div>
-                            <div class="flex items-end">
-                                <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                                    id="btn-buscar" type="submit">
-                                    Buscar
-                                </button>
-                            </div>
+                            <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                                id="btn-buscar" type="submit">
+                                Buscar
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -2074,6 +1492,9 @@
                         <table class="min-w-full bg-white">
                             <thead class="sticky top-0 bg-white">
                                 <tr class="bg-gray-100 text-gray-700">
+                                    <th class="py-3 px-4 text-left">
+                                        ID
+                                    </th>
                                     <th class="py-3 px-4 text-left">
                                         Nombre
                                     </th>
@@ -2605,99 +2026,33 @@
         let choferes = [];
 
         // Configuración de la API
-        const API_BASE_URL = 'https://hclicknbusiness.com/Mototaxis/api/';
-        const CACHE_BUSTER = '?v=' + Date.now();
-        
-        // Función para obtener token de sesión
-        function getSessionToken() {
-            return localStorage.getItem('session_token');
-        }
-        
-        // Función para verificar autenticación
-        async function checkAuth() {
-            const token = getSessionToken();
-            if (!token) {
-                window.location.href = 'login.html';
-                return false;
-            }
-            
-            // Verificar que el token sea válido en el servidor
-            try {
-                const response = await fetch('api/auth-simple.php?action=verify', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        return true;
-                    }
-                }
-                
-                // Token inválido
-                localStorage.removeItem('session_token');
-                window.location.href = 'login.html';
-                return false;
-                
-            } catch (error) {
-                console.error('Error verificando auth:', error);
-                // En caso de error de red, no redirigir inmediatamente
-                return true;
-            }
-        }
+        const API_BASE_URL = 'api/'; // Cambiar por la URL de tu hosting: 'https://tudominio.com/api/'
         
         // Funciones de la API
         async function apiCall(endpoint, method = 'GET', data = null) {
-            const token = getSessionToken();
-            
             const options = {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + (token || '')
                 },
             };
             
             if (data && method !== 'GET') {
-                if (typeof data === 'object') {
-                    data.token = token; // Agregar token al body también
-                }
                 options.body = JSON.stringify(data);
-            } else if (method === 'GET' && token) {
-                // Para GET, agregar token como parámetro
-                endpoint += (endpoint.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(token);
             }
             
             try {
-                const url = API_BASE_URL + endpoint + (endpoint.includes('?') ? '&' : '?') + 'v=' + Date.now();
-                const response = await fetch(url, options);
+                const response = await fetch(API_BASE_URL + endpoint, options);
                 const result = await response.json();
                 
                 if (!response.ok) {
-                    // Manejar error 401 (No autorizado)
-                    if (response.status === 401) {
-                        localStorage.removeItem('session_token');
-                        localStorage.removeItem('user_data');
-                        window.location.href = 'login.html';
-                        return;
-                    }
-                    throw new Error(result.message || result.error || 'Error en la API');
+                    throw new Error(result.error || 'Error en la API');
                 }
                 
                 return result;
             } catch (error) {
                 console.error('Error en API:', error);
-                
-                // Si es un error de red o conexión, mostrar mensaje
-                if (error.message.includes('401') || error.message.includes('No autorizado')) {
-                    localStorage.removeItem('session_token');
-                    localStorage.removeItem('user_data');
-                    window.location.href = 'login.html';
-                } else {
-                    alert('Error de conexión: ' + error.message);
-                }
+                alert('Error de conexión: ' + error.message);
                 throw error;
             }
         }
@@ -2749,16 +2104,8 @@
         // Funciones para gestionar choferes (usando API)
         async function cargarChoferes() {
             try {
-                console.log('Cargando choferes...');
-                const response = await apiCall('choferes.php');
-                console.log('Respuesta completa:', response);
-                
-                // Extraer los datos del array
-                choferes = response.data || response;
-                console.log('Choferes extraídos:', choferes);
-                
+                choferes = await apiCall('choferes.php');
                 actualizarTablaChoferes(choferes);
-                console.log('Tabla actualizada');
             } catch (error) {
                 console.error('Error al cargar choferes:', error);
             }
@@ -2771,48 +2118,19 @@
             choferes.forEach(chofer => {
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
+                    <td class="py-3 px-4 border-b">${chofer.id}</td>
                     <td class="py-3 px-4 border-b">${chofer.nombre}</td>
                     <td class="py-3 px-4 border-b">
-                        <button class="btn-icon btn-edit mr-2" data-id="${chofer.id}" data-nombre="${chofer.nombre}" data-action="edit">
+                        <button class="btn-icon btn-edit mr-2" onclick="editarChofer(${chofer.id}, '${chofer.nombre}')">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn-icon btn-delete" data-id="${chofer.id}" data-action="delete">
+                        <button class="btn-icon btn-delete" onclick="eliminarChofer(${chofer.id})">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
                 `;
                 tabla.appendChild(fila);
             });
-            
-            // Agregar event listeners después de crear los botones
-            agregarEventListenersTabla();
-        }
-        
-        function agregarEventListenersTabla() {
-            const tabla = document.getElementById('tabla-choferes');
-            
-            // Remover listeners anteriores
-            tabla.removeEventListener('click', manejarClickTabla);
-            
-            // Agregar nuevo listener
-            tabla.addEventListener('click', manejarClickTabla);
-        }
-        
-        function manejarClickTabla(event) {
-            const button = event.target.closest('button');
-            if (!button) return;
-            
-            const action = button.getAttribute('data-action');
-            const id = button.getAttribute('data-id');
-            const nombre = button.getAttribute('data-nombre');
-            
-            console.log('Click en botón:', action, id, nombre);
-            
-            if (action === 'edit') {
-                editarChofer(id, nombre);
-            } else if (action === 'delete') {
-                eliminarChofer(id);
-            }
         }
 
         function buscarChoferes(searchTerm, resultadosElementId, choferIdElementId, choferNombreElementId, choferSelectedElementId) {
@@ -2862,23 +2180,15 @@
             }
 
             try {
-                console.log('Agregando chofer:', nombreChofer);
-                
                 const chofer = {
                     nombre: nombreChofer
                 };
 
-                const resultado = await apiCall('choferes.php', 'POST', chofer);
-                console.log('Resultado de agregar chofer:', resultado);
-                
+                await apiCall('choferes.php', 'POST', chofer);
                 document.getElementById('nombre-chofer').value = '';
-                
-                console.log('Recargando lista de choferes...');
                 await cargarChoferes();
-                
                 alert('Operador agregado correctamente');
             } catch (error) {
-                console.error('Error completo:', error);
                 alert('Error al agregar el operador: ' + error.message);
             }
         }
@@ -2899,16 +2209,10 @@
         async function cargarRegistrosRecientes() {
             try {
                 const response = await apiCall('registros.php');
-                console.log('Response cargarRegistrosRecientes:', response);
+                const data = await response.json();
                 
-                // Extraer los datos del response
-                const data = response.data || response;
-                console.log('Data extraída:', data);
-                
-                if (!Array.isArray(data)) {
-                    console.log('Los datos no son un array, usando array vacío');
-                    actualizarTablaRegistros([]);
-                    return;
+                if (!data.success) {
+                    throw new Error(data.message || 'Error al cargar registros');
                 }
 
                 // Filtrar registros de los últimos 7 días
@@ -2916,7 +2220,7 @@
                 fechaLimite.setDate(fechaLimite.getDate() - 7);
                 const fechaLimiteStr = fechaLimite.toISOString().split('T')[0];
                 
-                const registrosFiltrados = data
+                const registrosFiltrados = data.data
                     .filter(registro => registro.fecha >= fechaLimiteStr)
                     .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
                     .slice(0, 20); // Limitar a 20 registros recientes
@@ -2966,10 +2270,10 @@
                     <td class="py-3 px-4 border-b">${registro.horas.toFixed(2)}</td>
                     <td class="py-3 px-4 border-b">
                         <div class="flex space-x-2">
-                            <button class="btn-icon btn-edit" data-id="${registro.id}" data-action="edit-registro">
+                            <button class="btn-icon btn-edit" onclick="editarRegistro(${registro.id})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn-icon btn-delete" data-id="${registro.id}" data-action="delete-registro">
+                            <button class="btn-icon btn-delete" onclick="confirmarEliminarRegistro(${registro.id})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -2983,38 +2287,9 @@
 
                 tabla.appendChild(fila);
             });
-            
-            // Agregar event listeners después de crear los botones
-            agregarEventListenersTablaRegistros();
-        }
-        
-        function agregarEventListenersTablaRegistros() {
-            const tabla = document.getElementById('tabla-registros');
-            
-            // Remover listeners anteriores
-            tabla.removeEventListener('click', manejarClickTablaRegistros);
-            
-            // Agregar nuevo listener
-            tabla.addEventListener('click', manejarClickTablaRegistros);
-        }
-        
-        function manejarClickTablaRegistros(event) {
-            const button = event.target.closest('button');
-            if (!button) return;
-            
-            const action = button.getAttribute('data-action');
-            const id = button.getAttribute('data-id');
-            
-            console.log('Click en botón registro:', action, id);
-            
-            if (action === 'edit-registro') {
-                editarRegistro(id);
-            } else if (action === 'delete-registro') {
-                confirmarEliminarRegistro(id);
-            }
         }
 
-        async function buscarUnidad() {
+        function buscarUnidad() {
             const numeroUnidad = parseInt(document.getElementById('search-unidad').value);
 
             if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 150) {
@@ -3022,49 +2297,37 @@
                 return;
             }
 
-            const fecha = document.getElementById('search-fecha').value;
+            const fecha = document.getElementById('fecha-registro').value;
 
             if (!fecha) {
                 alert('Por favor, selecciona una fecha');
                 return;
             }
 
-            try {
-                console.log('Buscando unidad:', numeroUnidad, 'fecha:', fecha);
-                
-                // Obtener todos los registros
-                const response = await apiCall('registros.php');
-                const data = response.data || response;
-                
-                console.log('Datos obtenidos:', data);
-                
-                if (!Array.isArray(data)) {
-                    console.log('Los datos no son un array');
-                    nuevoRegistro(numeroUnidad, fecha);
-                    return;
-                }
+            const transaction = db.transaction(['registros'], 'readonly');
+            const registrosStore = transaction.objectStore('registros');
+            const index = registrosStore.index('unidad');
+            const request = index.openCursor(IDBKeyRange.only(numeroUnidad));
 
-                // Buscar registro para esta unidad y fecha
-                const registroEncontrado = data.find(registro => 
-                    registro.unidad == numeroUnidad && registro.fecha === fecha
-                );
+            let registroEncontrado = null;
 
-                console.log('Registro encontrado:', registroEncontrado);
-
-                if (registroEncontrado) {
-                    mostrarDetallesUnidad(registroEncontrado);
+            request.onsuccess = function (event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    if (cursor.value.fecha === fecha) {
+                        registroEncontrado = cursor.value;
+                        mostrarDetallesUnidad(registroEncontrado);
+                        return;
+                    }
+                    cursor.continue();
                 } else {
                     // No se encontró registro para esta unidad y fecha
-                    nuevoRegistro(numeroUnidad, fecha);
+                    nuevoRegistro(numeroUnidad);
                 }
-                
-            } catch (error) {
-                console.error('Error al buscar unidad:', error);
-                alert('Error al buscar la unidad: ' + error.message);
-            }
+            };
         }
 
-        function nuevoRegistro(numeroUnidad = null, fecha = null) {
+        function nuevoRegistro(numeroUnidad = null) {
             // Limpiar formulario
             document.getElementById('chofer1-id').value = '';
             document.getElementById('chofer1-search').value = '';
@@ -3093,23 +2356,6 @@
                 } else {
                     document.getElementById('unidad-numero').textContent = '';
                     document.getElementById('search-unidad').value = '';
-                }
-            }
-
-            // Establecer la fecha en el campo de fecha-registro
-            if (fecha) {
-                document.getElementById('fecha-registro').value = fecha;
-            } else {
-                // Si no se proporciona fecha, usar la fecha del buscador o la actual
-                const fechaBuscador = document.getElementById('search-fecha').value;
-                if (fechaBuscador) {
-                    document.getElementById('fecha-registro').value = fechaBuscador;
-                } else {
-                    const today = new Date();
-                    const fechaActual = today.getFullYear() + '-' + 
-                        String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                        String(today.getDate()).padStart(2, '0');
-                    document.getElementById('fecha-registro').value = fechaActual;
                 }
             }
 
@@ -3168,7 +2414,6 @@
         }
 
         function mostrarDetallesUnidad(registro) {
-            console.log('mostrarDetallesUnidad llamada con:', registro);
             registroActual = registro;
 
             document.getElementById('unidad-numero').textContent = registro.unidad;
@@ -3344,26 +2589,22 @@
                 if (registroActual) {
                     // Editar registro existente
                     registro.id = registroActual.id;
-                    console.log('Editando registro:', registro);
                     response = await apiCall(`registros.php?id=${registro.id}`, 'PUT', registro);
                 } else {
                     // Crear nuevo registro
-                    console.log('Creando nuevo registro:', registro);
                     response = await apiCall('registros.php', 'POST', registro);
                 }
 
-                console.log('Respuesta del servidor:', response);
+                const data = await response.json();
                 
-                // response ya es el JSON parseado
-                if (!response.success) {
-                    throw new Error(response.message || 'Error al guardar el registro');
+                if (!data.success) {
+                    throw new Error(data.message || 'Error al guardar el registro');
                 }
 
                 alert('Registro guardado correctamente');
                 document.getElementById('unidad-details').classList.add('hidden');
                 await cargarRegistrosRecientes();
             } catch (error) {
-                console.error('Error al guardar registro:', error);
                 alert('Error al guardar el registro: ' + error.message);
             }
         }
@@ -3371,18 +2612,16 @@
         async function editarRegistro(id) {
             try {
                 const response = await apiCall(`registros.php?id=${id}`);
-                console.log('Respuesta editar registro:', response);
+                const data = await response.json();
                 
-                // response ya es el JSON parseado
-                if (!response.success) {
-                    throw new Error(response.message || 'Error al cargar el registro');
+                if (!data.success) {
+                    throw new Error(data.message || 'Error al cargar el registro');
                 }
 
-                if (response.data) {
-                    mostrarDetallesUnidad(response.data);
+                if (data.data) {
+                    mostrarDetallesUnidad(data.data);
                 }
             } catch (error) {
-                console.error('Error al cargar registro:', error);
                 alert('Error al cargar el registro: ' + error.message);
             }
         }
@@ -3396,21 +2635,17 @@
             if (!registroAEliminar) return;
 
             try {
-                console.log('Eliminando registro:', registroAEliminar);
                 const response = await apiCall(`registros.php?id=${registroAEliminar}`, 'DELETE');
-                console.log('Respuesta eliminar:', response);
+                const data = await response.json();
                 
-                // response ya es el JSON parseado
-                if (!response.success) {
-                    throw new Error(response.message || 'Error al eliminar el registro');
+                if (!data.success) {
+                    throw new Error(data.message || 'Error al eliminar el registro');
                 }
 
                 document.getElementById('modal-confirmacion').classList.add('hidden');
                 registroAEliminar = null;
                 await cargarRegistrosRecientes();
-                alert('Registro eliminado correctamente');
             } catch (error) {
-                console.error('Error al eliminar registro:', error);
                 alert('Error al eliminar el registro: ' + error.message);
             }
         }
@@ -3428,17 +2663,13 @@
             try {
                 // Obtener todos los registros para la fecha seleccionada
                 const response = await apiCall('registros.php');
-                console.log('Response cargarTablaUnidades:', response);
+                const data = await response.json();
                 
-                // Extraer los datos del response
-                const data = response.data || response;
-                console.log('Data extraída:', data);
-                
-                if (!Array.isArray(data)) {
-                    throw new Error('Los datos no tienen el formato esperado');
+                if (!data.success) {
+                    throw new Error(data.message || 'Error al cargar registros');
                 }
 
-                const registrosFecha = data.filter(registro => registro.fecha === fecha);
+                const registrosFecha = data.data.filter(registro => registro.fecha === fecha);
                 const registrosPorUnidad = {};
 
                 // Organizar registros por unidad
@@ -3514,7 +2745,7 @@
                             <td class="py-3 px-4 border-b">${registro.turnos}</td>
                             <td class="py-3 px-4 border-b">${registro.horas.toFixed(2)}</td>
                             <td class="py-3 px-4 border-b">
-                                <button class="btn-icon btn-edit" data-id="${registro.id}" data-action="edit-unidad">
+                                <button class="btn-icon btn-edit" onclick="editarRegistroDesdeTabla(${registro.id})">
                                     <i class="fas fa-edit"></i>
                                 </button>
                             </td>
@@ -3534,7 +2765,7 @@
                             <td class="py-3 px-4 border-b">0</td>
                             <td class="py-3 px-4 border-b">0.00</td>
                             <td class="py-3 px-4 border-b">
-                                <button class="btn-icon btn-add" data-unidad="${unidad}" data-action="add-unidad">
+                                <button class="btn-icon btn-add" onclick="crearRegistroDesdeTabla(${unidad})">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </td>
@@ -3543,44 +2774,12 @@
 
                     tabla.appendChild(fila);
                 });
-                
-                // Agregar event listeners después de crear los botones
-                agregarEventListenersTablaUnidades();
             } catch (error) {
                 alert('Error al cargar la tabla de unidades: ' + error.message);
             }
         }
-        
-        function agregarEventListenersTablaUnidades() {
-            const tabla = document.getElementById('tabla-todas-unidades');
-            
-            // Remover listeners anteriores
-            tabla.removeEventListener('click', manejarClickTablaUnidades);
-            
-            // Agregar nuevo listener
-            tabla.addEventListener('click', manejarClickTablaUnidades);
-        }
-        
-        function manejarClickTablaUnidades(event) {
-            const button = event.target.closest('button');
-            if (!button) return;
-            
-            const action = button.getAttribute('data-action');
-            const id = button.getAttribute('data-id');
-            const unidad = button.getAttribute('data-unidad');
-            
-            console.log('Click en botón unidad:', action, id, unidad);
-            
-            if (action === 'edit-unidad') {
-                editarRegistroDesdeTabla(id);
-            } else if (action === 'add-unidad') {
-                crearRegistroDesdeTabla(unidad);
-            }
-        }
 
         function editarRegistroDesdeTabla(id) {
-            console.log('editarRegistroDesdeTabla llamada con ID:', id);
-            
             // Cambiar a la pestaña de control
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.getElementById('content-control').classList.remove('hidden');
@@ -3589,7 +2788,6 @@
             document.getElementById('tab-control').classList.add('tab-active');
 
             // Editar el registro
-            console.log('Llamando a editarRegistro con ID:', id);
             editarRegistro(id);
         }
 
@@ -3618,7 +2816,8 @@
             }
 
             try {
-                const data = await apiCall('registros.php');
+                const response = await apiCall('registros.php');
+                const data = await response.json();
                 
                 if (!data.success) {
                     throw new Error(data.message || 'Error al cargar registros');
@@ -3758,19 +2957,16 @@
             }
 
             try {
-                const data = await apiCall('registros.php');
+                const response = await apiCall('registros.php');
+                const data = await response.json();
                 
                 if (!data.success) {
                     throw new Error(data.message || 'Error al cargar registros');
                 }
 
                 const registrosFiltrados = data.data.filter(registro => {
-                    // Usar parsing manual para evitar problemas de timezone
-                    const fechaParts = registro.fecha.split('-');
-                    const anioRegistro = parseInt(fechaParts[0]);
-                    const mesRegistro = parseInt(fechaParts[1]);
-                    
-                    return mesRegistro === mes && anioRegistro === anio;
+                    const fecha = new Date(registro.fecha);
+                    return fecha.getMonth() + 1 === mes && fecha.getFullYear() === anio;
                 });
 
                 mostrarReporteMensual(registrosFiltrados);
@@ -3870,7 +3066,8 @@
             }
 
             try {
-                const data = await apiCall('registros.php');
+                const response = await apiCall('registros.php');
+                const data = await response.json();
                 
                 if (!data.success) {
                     throw new Error(data.message || 'Error al cargar registros');
@@ -3878,10 +3075,11 @@
 
                 // Filtrar registros por conductor y rango de fechas
                 const registrosFiltrados = data.data.filter(registro => {
-                    // Usar comparación directa de strings para evitar problemas de timezone
-                    const fechaRegistro = registro.fecha;
+                    const fechaRegistro = new Date(registro.fecha);
+                    const fechaInicioDate = new Date(fechaInicio);
+                    const fechaFinDate = new Date(fechaFin);
                     
-                    const dentroDeFechas = fechaRegistro >= fechaInicio && fechaRegistro <= fechaFin;
+                    const dentroDeFechas = fechaRegistro >= fechaInicioDate && fechaRegistro <= fechaFinDate;
                     
                     // Verificar si el conductor está en alguno de los turnos
                     const esConductorTurno1 = registro.chofer1 === conductorId;
@@ -3991,8 +3189,8 @@
                     }
                 });
 
-                // Ordenar turnos por fecha (usando comparación de strings)
-                turnosDetallados.sort((a, b) => a.fecha.localeCompare(b.fecha));
+                // Ordenar turnos por fecha
+                turnosDetallados.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
                 // Agregar filas a la tabla
                 turnosDetallados.forEach(turno => {
@@ -4031,13 +3229,12 @@
         }
 
         function formatearFecha(fechaISO) {
-            // Usar parsing manual para evitar problemas de timezone
-            const fechaParts = fechaISO.split('-');
-            const year = fechaParts[0];
-            const month = fechaParts[1];
-            const day = fechaParts[2];
-            
-            return `${day}/${month}/${year}`;
+            const fecha = new Date(fechaISO);
+            return fecha.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
         }
 
         function buscarChoferesReporte(searchTerm) {
@@ -4125,7 +3322,8 @@
             }
 
             try {
-                const data = await apiCall('registros.php');
+                const response = await apiCall('registros.php');
+                const data = await response.json();
                 
                 if (!data.success) {
                     throw new Error(data.message || 'Error al cargar registros');
@@ -4133,10 +3331,11 @@
 
                 // Filtrar registros por unidad y rango de fechas
                 const registrosFiltrados = data.data.filter(registro => {
-                    // Usar comparación directa de strings para evitar problemas de timezone
-                    const fechaRegistro = registro.fecha;
+                    const fechaRegistro = new Date(registro.fecha);
+                    const fechaInicioDate = new Date(fechaInicio);
+                    const fechaFinDate = new Date(fechaFin);
                     
-                    const dentroDeFechas = fechaRegistro >= fechaInicio && fechaRegistro <= fechaFin;
+                    const dentroDeFechas = fechaRegistro >= fechaInicioDate && fechaRegistro <= fechaFinDate;
                     const esLaUnidad = parseInt(registro.unidad) === parseInt(numeroUnidad);
                     
                     return dentroDeFechas && esLaUnidad;
@@ -4166,8 +3365,8 @@
                 `;
                 tabla.appendChild(fila);
             } else {
-                // Ordenar registros por fecha (usando comparación de strings)
-                registros.sort((a, b) => a.fecha.localeCompare(b.fecha));
+                // Ordenar registros por fecha
+                registros.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
                 registros.forEach(registro => {
                     diasOperados.add(registro.fecha);
@@ -4243,236 +3442,8 @@
             document.getElementById('reporte-unidad-resultados').classList.add('hidden');
         }
 
-        // Funciones para manejo de tema
-        function initTheme() {
-            // Verificar si hay un tema guardado en localStorage
-            const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // Usar tema guardado o preferencia del sistema
-            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-            
-            setTheme(theme);
-        }
-
-        function setTheme(theme) {
-            const body = document.body;
-            const lightIcon = document.getElementById('theme-icon-light');
-            const darkIcon = document.getElementById('theme-icon-dark');
-            
-            if (theme === 'dark') {
-                body.setAttribute('data-theme', 'dark');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
-                
-                // Forzar estilos para el panel de resumen inmediatamente y con observer
-                applyDarkThemeToResumen();
-                
-                // Observer para aplicar estilos cuando aparezcan nuevos elementos
-                const observer = new MutationObserver(() => {
-                    applyDarkThemeToResumen();
-                });
-                observer.observe(document.body, { childList: true, subtree: true });
-                
-            } else {
-                body.removeAttribute('data-theme');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-                
-                // Remover estilos forzados en modo claro
-                removeDarkThemeFromResumen();
-            }
-            
-            // Guardar preferencia
-            localStorage.setItem('theme', theme);
-        }
-
-        function applyDarkThemeToResumen() {
-            // Aplicar estilos a elementos bg-gray-100
-            const resumenDivs = document.querySelectorAll('.bg-gray-100');
-            resumenDivs.forEach(div => {
-                div.style.setProperty('background-color', '#374151', 'important');
-                div.style.setProperty('color', '#ffffff', 'important');
-                div.style.setProperty('border', '1px solid #4b5563', 'important');
-                
-                // Aplicar a todos los elementos hijos también
-                const allChildren = div.querySelectorAll('*');
-                allChildren.forEach(child => {
-                    child.style.setProperty('color', '#ffffff', 'important');
-                });
-            });
-
-            // Aplicar estilos a operadores seleccionados (bg-blue-50)
-            const operadorDivs = document.querySelectorAll('.bg-blue-50');
-            operadorDivs.forEach(div => {
-                div.style.setProperty('background-color', '#1e3a8a', 'important');
-                div.style.setProperty('border-color', '#3b82f6', 'important');
-                
-                const spans = div.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.setProperty('color', '#ffffff', 'important');
-                });
-                
-                const buttons = div.querySelectorAll('button');
-                buttons.forEach(button => {
-                    button.style.setProperty('color', '#d1d5db', 'important');
-                });
-            });
-        }
-
-        function removeDarkThemeFromResumen() {
-            // Remover estilos de elementos bg-gray-100
-            const resumenDivs = document.querySelectorAll('.bg-gray-100');
-            resumenDivs.forEach(div => {
-                div.style.removeProperty('background-color');
-                div.style.removeProperty('color');
-                div.style.removeProperty('border');
-                
-                const allChildren = div.querySelectorAll('*');
-                allChildren.forEach(child => {
-                    child.style.removeProperty('color');
-                });
-            });
-
-            // Remover estilos de operadores seleccionados (bg-blue-50)
-            const operadorDivs = document.querySelectorAll('.bg-blue-50');
-            operadorDivs.forEach(div => {
-                div.style.removeProperty('background-color');
-                div.style.removeProperty('border-color');
-                
-                const spans = div.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.removeProperty('color');
-                });
-                
-                const buttons = div.querySelectorAll('button');
-                buttons.forEach(button => {
-                    button.style.removeProperty('color');
-                });
-            });
-        }
-
-        function toggleTheme() {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            setTheme(newTheme);
-        }
-
-        // Función de logout
-        async function logout() {
-            try {
-                const token = getSessionToken();
-                if (token) {
-                    // Intentar logout en el servidor
-                    const response = await fetch('./api/auth-simple.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ 
-                            action: 'logout'
-                        })
-                    });
-                    
-                    // No importa si falla, igual limpiamos local
-                    if (response.ok) {
-                        console.log('Logout exitoso en servidor');
-                    }
-                }
-            } catch (error) {
-                console.log('Error en logout servidor:', error);
-                // No importa el error, igual limpiamos local
-            } finally {
-                // Limpiar datos locales
-                localStorage.removeItem('session_token');
-                localStorage.removeItem('user_data');
-                
-                // Redireccionar al login
-                window.location.href = 'login.html';
-            }
-        }
-
-        // Función para verificar autenticación al inicio
-        async function verifyAuth() {
-            const token = getSessionToken();
-            
-            if (!token) {
-                window.location.href = 'login.html?from=index';
-                return false;
-            }
-            
-            try {
-                const response = await fetch('./api/auth-simple.php?action=verify', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (!data.success) {
-                    throw new Error('Token inválido');
-                }
-                
-                // Actualizar información del usuario en la interfaz
-                if (data.user) {
-                    document.getElementById('user-name').textContent = data.user.name || data.user.username;
-                    // Guardar datos del usuario
-                    localStorage.setItem('user_data', JSON.stringify(data.user));
-                    
-                    // Mostrar botón de administración si es admin
-                    if (data.user.role === 'admin') {
-                        document.getElementById('admin-btn').classList.remove('hidden');
-                    }
-                }
-                
-                return true;
-                
-            } catch (error) {
-                console.error('Error verificando autenticación:', error);
-                localStorage.removeItem('session_token');
-                localStorage.removeItem('user_data');
-                window.location.href = 'login.html?from=index';
-                return false;
-            }
-        }
-
         // Eventos de la interfaz
-        document.addEventListener('DOMContentLoaded', async function () {
-            // Verificar autenticación primero
-            const isAuthenticated = await verifyAuth();
-            if (!isAuthenticated) {
-                return; // Si no está autenticado, se redirige automáticamente
-            }
-
-            // Inicializar tema
-            initTheme();
-
-            // Event listener para el botón de tema
-            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-
-            // Event listener para logout
-            document.getElementById('logout-button').addEventListener('click', function() {
-                if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                    logout();
-                }
-            });
-
-            // Event listener para el botón de administración
-            document.getElementById('admin-btn').addEventListener('click', function() {
-                window.open('admin-security.html', '_blank');
-            });
-
-            // Establecer fecha actual en el buscador
-            const today = new Date();
-            const fechaActual = today.getFullYear() + '-' + 
-                String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(today.getDate()).padStart(2, '0');
-            document.getElementById('search-fecha').value = fechaActual;
-
+        document.addEventListener('DOMContentLoaded', function () {
             // Inicializar base de datos
             inicializarDB();
 
@@ -4511,122 +3482,6 @@
                 document.querySelectorAll('button[id^="tab-"]').forEach(btn => btn.classList.remove('tab-active'));
                 this.classList.add('tab-active');
             });
-
-            // Eventos del menú móvil
-            document.getElementById('mobile-menu-toggle').addEventListener('click', function () {
-                const mobileMenu = document.getElementById('mobile-menu');
-                const hamburgerIcon = this.querySelector('svg');
-                
-                mobileMenu.classList.toggle('hidden');
-                hamburgerIcon.classList.toggle('active');
-            });
-
-            // Eventos de pestañas móviles
-            document.getElementById('mobile-tab-control').addEventListener('click', function () {
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-                document.getElementById('content-control').classList.remove('hidden');
-
-                // Actualizar estado activo en ambos menús
-                document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
-                this.classList.add('tab-active');
-                document.getElementById('tab-control').classList.add('tab-active');
-                
-                // Ocultar menú móvil y resetear icono
-                const mobileMenu = document.getElementById('mobile-menu');
-                const hamburgerIcon = document.getElementById('mobile-menu-toggle').querySelector('svg');
-                mobileMenu.classList.add('hidden');
-                hamburgerIcon.classList.remove('active');
-            });
-
-            document.getElementById('mobile-tab-unidades').addEventListener('click', function () {
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-                document.getElementById('content-unidades').classList.remove('hidden');
-
-                // Actualizar estado activo en ambos menús
-                document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
-                this.classList.add('tab-active');
-                document.getElementById('tab-unidades').classList.add('tab-active');
-
-                // Cargar tabla de unidades al cambiar a esta pestaña
-                cargarTablaUnidades();
-                
-                // Ocultar menú móvil y resetear icono
-                const mobileMenu = document.getElementById('mobile-menu');
-                const hamburgerIcon = document.getElementById('mobile-menu-toggle').querySelector('svg');
-                mobileMenu.classList.add('hidden');
-                hamburgerIcon.classList.remove('active');
-            });
-
-            document.getElementById('mobile-tab-choferes').addEventListener('click', function () {
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-                document.getElementById('content-choferes').classList.remove('hidden');
-
-                // Actualizar estado activo en ambos menús
-                document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
-                this.classList.add('tab-active');
-                document.getElementById('tab-choferes').classList.add('tab-active');
-                
-                // Ocultar menú móvil y resetear icono
-                const mobileMenu = document.getElementById('mobile-menu');
-                const hamburgerIcon = document.getElementById('mobile-menu-toggle').querySelector('svg');
-                mobileMenu.classList.add('hidden');
-                hamburgerIcon.classList.remove('active');
-            });
-
-            document.getElementById('mobile-tab-reportes').addEventListener('click', function () {
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-                document.getElementById('content-reportes').classList.remove('hidden');
-
-                // Actualizar estado activo en ambos menús
-                document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
-                this.classList.add('tab-active');
-                document.getElementById('tab-reportes').classList.add('tab-active');
-                
-                // Ocultar menú móvil y resetear icono
-                const mobileMenu = document.getElementById('mobile-menu');
-                const hamburgerIcon = document.getElementById('mobile-menu-toggle').querySelector('svg');
-                mobileMenu.classList.add('hidden');
-                hamburgerIcon.classList.remove('active');
-            });
-
-            // Cerrar menú móvil al hacer clic fuera de él
-            document.addEventListener('click', function (e) {
-                const mobileMenu = document.getElementById('mobile-menu');
-                const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-                const hamburgerIcon = mobileMenuToggle.querySelector('svg');
-                
-                if (!mobileMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                    mobileMenu.classList.add('hidden');
-                    hamburgerIcon.classList.remove('active');
-                }
-            });
-
-            // Cerrar menú móvil al hacer scroll
-            window.addEventListener('scroll', function () {
-                const mobileMenu = document.getElementById('mobile-menu');
-                const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-                const hamburgerIcon = mobileMenuToggle.querySelector('svg');
-                
-                mobileMenu.classList.add('hidden');
-                hamburgerIcon.classList.remove('active');
-            });
-
-            // Función para sincronizar el estado activo entre menús móvil y desktop
-            function syncTabState(activeTabId) {
-                document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => {
-                    btn.classList.remove('tab-active');
-                });
-                
-                // Activar tab en menú desktop
-                document.getElementById(activeTabId).classList.add('tab-active');
-                
-                // Activar tab correspondiente en menú móvil
-                const mobileTabId = 'mobile-' + activeTabId;
-                const mobileTab = document.getElementById(mobileTabId);
-                if (mobileTab) {
-                    mobileTab.classList.add('tab-active');
-                }
-            }
 
             // Eventos de control de unidades
             document.getElementById('form-buscar-unidad').addEventListener('submit', function (e) {
@@ -4746,7 +3601,7 @@ function editarChofer(id, nombre) {
     document.getElementById('texto-boton-chofer').textContent = 'Guardar Cambios';
 }
 
-async function guardarChofer() {
+function guardarChofer() {
     const nombre = document.getElementById('nombre-chofer').value.trim();
     const idEdicion = document.getElementById('id-chofer-edicion').value;
 
@@ -4755,25 +3610,35 @@ async function guardarChofer() {
         return;
     }
 
-    try {
-        if (idEdicion) {
-            // Editar operador existente
-            console.log('Editando chofer:', idEdicion, nombre);
-            await apiCall(`choferes.php?id=${idEdicion}`, 'PUT', { nombre: nombre });
-            alert('Operador actualizado correctamente');
-        } else {
-            // Agregar nuevo operador
-            console.log('Agregando nuevo chofer:', nombre);
-            await apiCall('choferes.php', 'POST', { nombre: nombre });
-            alert('Operador agregado correctamente');
-        }
-        
-        limpiarFormularioChofer();
-        await cargarChoferes();
-        
-    } catch (error) {
-        console.error('Error al guardar chofer:', error);
-        alert('Error al guardar el operador: ' + error.message);
+    const transaction = db.transaction(['choferes'], 'readwrite');
+    const store = transaction.objectStore('choferes');
+
+    if (idEdicion) {
+        const id = Number(idEdicion);
+        const getRequest = store.get(id);
+        getRequest.onsuccess = function () {
+            const chofer = getRequest.result;
+            chofer.nombre = nombre;
+            const updateRequest = store.put(chofer);
+            updateRequest.onsuccess = function () {
+                limpiarFormularioChofer();
+                cargarChoferes();
+            };
+        };
+    } else {
+        const nuevoChofer = { nombre };
+        const addRequest = store.add(nuevoChofer);
+        addRequest.onsuccess = function () {
+            limpiarFormularioChofer();
+            cargarChoferes();
+        };
+        addRequest.onerror = function (event) {
+            if (event.target.error.name === 'ConstraintError') {
+                alert('Ya existe un operador con ese nombre');
+            } else {
+                alert('Error al agregar operador');
+            }
+        };
     }
 }
 
@@ -5103,6 +3968,150 @@ function limpiarFormularioChofer() {
         // Funciones globales para la tabla de unidades
         window.editarRegistroDesdeTabla = editarRegistroDesdeTabla;
         window.crearRegistroDesdeTabla = crearRegistroDesdeTabla;
+    </script>
+    
+    <!-- Script de Autenticación y Administración -->
+    <script>
+        // Función para realizar llamadas API con autenticación
+        async function apiCall(endpoint, options = {}) {
+            const token = localStorage.getItem('token');
+            
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+            
+            const finalOptions = {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...options.headers
+                }
+            };
+            
+            try {
+                const response = await fetch(`api/${endpoint}`, finalOptions);
+                
+                // Si es 401, redirigir al login
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    console.log('Token inválido, redirigiendo al login');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Verificar si es JSON válido
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('Respuesta no JSON:', text);
+                    throw new Error('Error del servidor');
+                }
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Error en la petición');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error en API call:', error);
+                
+                // Si hay error de conexión, mostrar mensaje pero no redirigir
+                if (error.message.includes('fetch')) {
+                    console.error('Error de conexión con el servidor');
+                }
+                
+                throw error;
+            }
+        }
+
+        // Verificar autenticación al cargar la página
+        async function verifyAuth() {
+            try {
+                console.log('🔐 Verificando autenticación...');
+                const token = localStorage.getItem('token');
+                console.log('🎫 Token encontrado:', token ? 'Sí' : 'No');
+                
+                if (!token) {
+                    console.log('❌ No hay token, redirigiendo al login');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const response = await apiCall('auth-simple.php?action=verify');
+                console.log('✅ Respuesta de verificación:', response); // Debug
+                
+                // Mostrar información del usuario
+                document.getElementById('user-info').textContent = 
+                    `Bienvenido, ${response.user.name} (${response.user.role})`;
+                
+                // Mostrar botón de administración solo para admins
+                console.log('👤 Rol del usuario:', response.user.role); // Debug
+                if (response.user.role === 'admin') {
+                    console.log('👑 Usuario es admin, mostrando botón'); // Debug
+                    document.getElementById('admin-btn').classList.remove('hidden');
+                } else {
+                    console.log('👤 Usuario no es admin, rol:', response.user.role); // Debug
+                }
+                
+                return response.user;
+            } catch (error) {
+                console.error('❌ Error verificando autenticación:', error);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Función de logout
+        async function logout() {
+            try {
+                await apiCall('auth-simple.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'logout' })
+                });
+            } catch (error) {
+                console.error('Error en logout:', error);
+            } finally {
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            verifyAuth();
+            
+            // Botón de logout
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Botón de administración
+            document.getElementById('admin-btn').addEventListener('click', function() {
+                window.open('admin-security.html', '_blank');
+            });
+        });
+
+        // Sobrescribir las funciones fetch existentes para incluir autenticación
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            // Solo aplicar autenticación a llamadas API locales (no auth-simple.php que ya maneja auth)
+            if (url.includes('api/') && !url.includes('auth-simple.php')) {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    options.headers = {
+                        ...options.headers,
+                        'Authorization': `Bearer ${token}`
+                    };
+                }
+            }
+            
+            return originalFetch(url, options);
+        };
     </script>
     <script>
         (function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'958018ca9776aec5',t:'MTc1MTMxMjAyMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();

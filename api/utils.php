@@ -1,5 +1,9 @@
 <?php
 require_once 'config.php';
+require_once 'auth_guard.php';
+
+// Validar autenticación para todas las operaciones
+$user = requireAuth();
 
 $action = $_GET['action'] ?? '';
 
