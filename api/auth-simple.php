@@ -146,7 +146,7 @@ try {
                 http_response_code(401);
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Sesión inválida'
+                    'message' => 'Usuario no encontrado en sesión'
                 ]);
             }
             break;

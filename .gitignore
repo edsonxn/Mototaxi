@@ -6,6 +6,13 @@
 api/sessions/
 *.session
 
+# Archivos de configuración con API Keys (CRÍTICO)
+api/config-secure.php
+.env
+*.key
+openai_key.txt
+config_keys.php
+
 # Archivos del sistema
 .DS_Store
 Thumbs.db

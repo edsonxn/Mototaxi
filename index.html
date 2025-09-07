@@ -651,6 +651,17 @@
                 min-width: auto;
             }
         }
+
+        /* Estilos para el placeholder del contenteditable */
+        #chat-input[contenteditable]:empty:before {
+            content: attr(data-placeholder);
+            color: #9CA3AF;
+            pointer-events: none;
+        }
+
+        #chat-input:focus:before {
+            content: none;
+        }
     </style>
     <style>
         *,
@@ -1567,6 +1578,9 @@
                     <button id="mobile-tab-reportes">
                         Reportes
                     </button>
+                    <button id="mobile-tab-chat">
+                        Chat
+                    </button>
                 </div>
             </div>
         </header>
@@ -1587,6 +1601,9 @@
                 </button>
                 <button class="px-6 py-3 font-medium text-gray-700 hover:bg-blue-100 rounded-t-lg" id="tab-reportes">
                     Reportes
+                </button>
+                <button class="px-6 py-3 font-medium text-gray-700 hover:bg-blue-100 rounded-t-lg" id="tab-chat">
+                    Chat
                 </button>
             </div>
             <!-- Contenido de las pestañas -->
@@ -2572,6 +2589,134 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-content hidden" id="content-chat">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800">
+                                Asistente Virtual MotoTaxi
+                            </h2>
+                            <p class="text-sm text-gray-600">
+                                Powered by OpenAI - Pregúntame lo que necesites
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Panel de chat principal -->
+                    <div class="border rounded-lg flex flex-col h-96 mb-4">
+                        <!-- Área de mensajes -->
+                        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-mensajes">
+                            <!-- Mensaje de bienvenida del bot -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm">
+                                    🤖
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-medium text-sm text-blue-600">Asistente Virtual</span>
+                                        <span class="text-xs text-gray-500" id="bot-time"></span>
+                                    </div>
+                                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-3 text-sm">
+                                        ¡Hola! Soy tu asistente para consultar turnos y horarios de mototaxis. Pregúntame cosas como:
+                                        <ul class="mt-2 space-y-1">
+                                            <li>• "¿Qué turno tuvo la unidad 78 ayer?"</li>
+                                            <li>• "¿Quién trabajó más en la última semana?"</li>
+                                            <li>• "Turnos de hoy en la unidad 150"</li>
+                                            <li>• "¿Quién trabajó más en el último mes?"</li>
+                                        </ul>
+                                        ¿Qué turnos quieres consultar?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Área de escribir mensaje -->
+                        <div class="border-t p-4">
+                            <div class="flex gap-2">
+                                <div
+                                    contenteditable="true"
+                                    data-placeholder="Escribe tu pregunta..."
+                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[40px] max-h-[120px] overflow-y-auto"
+                                    id="chat-input"
+                                    role="textbox"
+                                    aria-label="Campo de chat para preguntas"
+                                    style="line-height: 1.5;"
+                                ></div>
+                                <button
+                                    class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition flex items-center gap-2 disabled:opacity-50"
+                                    id="chat-enviar"
+                                >
+                                    <i class="fas fa-paper-plane"></i>
+                                    Enviar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panel de configuración -->
+                    <div class="bg-gray-50 border rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-medium text-gray-700">
+                                <i class="fas fa-cog mr-2"></i>
+                                Configuración del Chatbot
+                            </h3>
+                            <button 
+                                class="text-sm text-blue-600 hover:text-blue-800"
+                                id="toggle-config"
+                            >
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="hidden space-y-3" id="chat-config">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    API Key de OpenAI
+                                </label>
+                                <input
+                                    type="password"
+                                    placeholder="sk-..."
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                    id="openai-api-key"
+                                />
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Tu API key se guarda localmente y no se envía al servidor
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Modelo
+                                </label>
+                                <select
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                    id="openai-model"
+                                >
+                                    <option value="gpt-5-nano" selected>GPT-5 Nano</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Modelo optimizado para consultas de turnos de mototaxis
+                                </p>
+                            </div>
+                            <button
+                                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
+                                id="guardar-config"
+                            >
+                                <i class="fas fa-save mr-2"></i>
+                                Guardar Configuración
+                            </button>
+                            <button
+                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm w-full"
+                                id="limpiar-historial"
+                            >
+                                <i class="fas fa-trash mr-2"></i>
+                                Limpiar Historial de Conversación
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Modal de confirmación -->
@@ -2603,6 +2748,9 @@
         let registroActual = null;
         let registroAEliminar = null;
         let choferes = [];
+        
+        // Variable para almacenar el historial del chatbot
+        let historialChatbot = [];
 
         // Configuración de la API
         const API_BASE_URL = 'https://hclicknbusiness.com/Mototaxis/api/';
@@ -4512,6 +4660,14 @@
                 this.classList.add('tab-active');
             });
 
+            document.getElementById('tab-chat').addEventListener('click', function () {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                document.getElementById('content-chat').classList.remove('hidden');
+
+                document.querySelectorAll('button[id^="tab-"]').forEach(btn => btn.classList.remove('tab-active'));
+                this.classList.add('tab-active');
+            });
+
             // Eventos del menú móvil
             document.getElementById('mobile-menu-toggle').addEventListener('click', function () {
                 const mobileMenu = document.getElementById('mobile-menu');
@@ -4581,6 +4737,22 @@
                 document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
                 this.classList.add('tab-active');
                 document.getElementById('tab-reportes').classList.add('tab-active');
+                
+                // Ocultar menú móvil y resetear icono
+                const mobileMenu = document.getElementById('mobile-menu');
+                const hamburgerIcon = document.getElementById('mobile-menu-toggle').querySelector('svg');
+                mobileMenu.classList.add('hidden');
+                hamburgerIcon.classList.remove('active');
+            });
+
+            document.getElementById('mobile-tab-chat').addEventListener('click', function () {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                document.getElementById('content-chat').classList.remove('hidden');
+
+                // Actualizar estado activo en ambos menús
+                document.querySelectorAll('button[id^="tab-"], button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
+                this.classList.add('tab-active');
+                document.getElementById('tab-chat').classList.add('tab-active');
                 
                 // Ocultar menú móvil y resetear icono
                 const mobileMenu = document.getElementById('mobile-menu');
@@ -5103,6 +5275,2009 @@ function limpiarFormularioChofer() {
         // Funciones globales para la tabla de unidades
         window.editarRegistroDesdeTabla = editarRegistroDesdeTabla;
         window.crearRegistroDesdeTabla = crearRegistroDesdeTabla;
+
+        // Variables globales del chatbot
+        let chatInput, chatEnviar, chatMensajes;
+
+        // Función para formatear turnos de manera simple
+        function formatearTurnosSimple(registro) {
+            let texto = '';
+            
+            // Caso especial: turno completo (mismo chofer, sin chofer2, salida1 y llegada2)
+            if (registro.chofer1Nombre && registro.chofer1Nombre.trim() && 
+                !registro.chofer2Nombre && registro.salida1 && registro.llegada2) {
+                
+                return `${registro.chofer1Nombre} de ${registro.salida1} a ${registro.llegada2} (turno completo)`;
+            }
+            
+            // Turno 1 (mañana) - usar chofer1Nombre
+            const tieneChofer1 = registro.chofer1Nombre && registro.chofer1Nombre.trim() !== '';
+            const tieneChofer2 = registro.chofer2Nombre && registro.chofer2Nombre.trim() !== '';
+            
+            if (tieneChofer1) {
+                let horario1 = '';
+                if (registro.salida1 && registro.llegada1) {
+                    horario1 = ` de ${registro.salida1} a ${registro.llegada1}`;
+                } else if (registro.salida1) {
+                    horario1 = ` desde las ${registro.salida1}`;
+                } else if (registro.llegada1) {
+                    horario1 = ` hasta las ${registro.llegada1}`;
+                } else {
+                    horario1 = ' (turno mañana)';
+                }
+                
+                texto += `${registro.chofer1Nombre}${horario1}`;
+                if (tieneChofer2) {
+                    texto += ', ';
+                }
+            }
+            
+            // Turno 2 (noche) - usar chofer2Nombre
+            if (tieneChofer2) {
+                let horario2 = '';
+                if (registro.salida2 && registro.llegada2) {
+                    horario2 = ` de ${registro.salida2} a ${registro.llegada2}`;
+                } else if (registro.salida2) {
+                    horario2 = ` desde las ${registro.salida2}`;
+                } else if (registro.llegada2) {
+                    horario2 = ` hasta las ${registro.llegada2}`;
+                } else {
+                    horario2 = ' (turno noche)';
+                }
+                
+                texto += `${registro.chofer2Nombre}${horario2}`;
+            }
+            
+            // Si no hay ningún turno
+            if (!tieneChofer1 && !tieneChofer2) {
+                texto = 'No trabajó nadie ese día';
+            }
+            
+            return texto;
+        }
+
+        // Función para que el LLM analice la consulta y genere un plan de búsqueda
+        async function analizarConsultaConIA(mensaje) {
+            try {
+                const apiKey = localStorage.getItem('openai_api_key');
+                if (!apiKey) {
+                    throw new Error('API Key de OpenAI no configurada');
+                }
+                
+                const prompt = `Analiza esta consulta sobre turnos de mototaxis y genera un plan de búsqueda JSON:
+
+CONSULTA DEL USUARIO: "${mensaje}"
+
+INFORMACIÓN DEL SISTEMA:
+- 150 unidades numeradas del 1 al 150
+- Base de datos con registros que incluyen: fecha, unidad, chofer1Nombre, chofer2Nombre, salida1, llegada1, salida2, llegada2
+- Fecha actual: ${getFechaLocalISO()}
+
+TIPOS DE ANÁLISIS POSIBLES:
+1. "turnos_por_fecha" - Mostrar turnos de una fecha específica
+2. "turnos_por_unidad" - Mostrar turnos de una unidad específica
+3. "estadisticas_chofer" - Analizar qué chofer trabajó más
+4. "estadisticas_unidad" - Analizar qué unidades trabajaron más
+5. "primer_turno_dia" - Encontrar quién empezó primero un día
+6. "analisis_periodo" - Análisis complejo de un período
+
+Responde SOLO con un JSON válido con esta estructura:
+{
+  "tipo_analisis": "uno de los tipos de arriba",
+  "periodo": {
+    "fecha_inicio": "YYYY-MM-DD o null",
+    "fecha_fin": "YYYY-MM-DD o null",
+    "descripcion": "descripción del período"
+  },
+  "filtros": {
+    "unidades": [números de unidades específicas o null],
+    "choferes": ["nombres específicos o null"]
+  },
+  "objetivo": "descripción clara de qué buscar",
+  "orden": "asc o desc para ordenamiento"
+}`;
+
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [{ role: 'user', content: prompt }],
+                        temperature: 0.1,
+                        max_tokens: 500
+                    })
+                });
+                
+                const data = await response.json();
+                const planTexto = data.choices[0].message.content.trim();
+                
+                // Limpiar el texto para extraer solo el JSON
+                const jsonMatch = planTexto.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    const plan = JSON.parse(jsonMatch[0]);
+                    console.log('📋 Plan de consulta generado por IA:', plan);
+                    return plan;
+                } else {
+                    throw new Error('No se pudo extraer JSON válido de la respuesta');
+                }
+                
+            } catch (error) {
+                console.error('Error analizando consulta con IA:', error);
+                // Fallback al análisis manual básico
+                return analizarConsultaManual(mensaje);
+            }
+        }
+
+        // Función de fallback para análisis manual básico
+        function analizarConsultaManual(mensaje) {
+            const mensajeLower = mensaje.toLowerCase();
+            
+            // Análisis básico de fechas
+            let fechaInicio = null;
+            let fechaFin = null;
+            
+            if (mensajeLower.includes('hoy')) {
+                fechaInicio = fechaFin = getFechaLocalISO();
+            } else if (mensajeLower.includes('ayer')) {
+                const ayer = new Date();
+                ayer.setDate(ayer.getDate() - 1);
+                fechaInicio = fechaFin = ayer.toISOString().split('T')[0];
+            } else if (mensajeLower.includes('este mes')) {
+                const hoy = new Date();
+                fechaInicio = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-01`;
+                fechaFin = getFechaLocalISO();
+            }
+            
+            // Detectar números de unidad
+            const unidadPattern = /unidad\s*(\d+)/gi;
+            const unidadMatches = mensaje.match(unidadPattern);
+            let unidades = null;
+            if (unidadMatches) {
+                unidades = unidadMatches.map(match => {
+                    const numero = match.match(/(\d+)/);
+                    return numero ? parseInt(numero[1]) : null;
+                }).filter(num => num !== null && num >= 1 && num <= 150);
+            }
+            
+            // Detectar nombres de choferes comunes
+            const nombresComunes = ['sergio', 'pedro', 'juan', 'carlos', 'eduardo', 'miguel', 'jose', 'luis', 'mario', 'alberto'];
+            let choferDetectado = null;
+            for (const nombre of nombresComunes) {
+                if (mensajeLower.includes(nombre)) {
+                    choferDetectado = nombre;
+                    break;
+                }
+            }
+            
+            // Detectar si pregunta por horas trabajadas
+            const consultaHoras = mensajeLower.includes('horas') || mensajeLower.includes('trabajado');
+            
+            let tipoAnalisis = 'primer_turno_dia';
+            if (consultaHoras && choferDetectado) {
+                tipoAnalisis = 'estadisticas_chofer';
+            } else if (mensajeLower.includes('inicio') || mensajeLower.includes('empez') || mensajeLower.includes('primer')) {
+                tipoAnalisis = 'primer_turno_dia';
+            }
+            
+            return {
+                tipo_analisis: tipoAnalisis,
+                periodo: {
+                    fecha_inicio: fechaInicio,
+                    fecha_fin: fechaFin,
+                    descripcion: 'Consulta básica'
+                },
+                filtros: {
+                    unidades: unidades,
+                    choferes: choferDetectado ? [choferDetectado] : null
+                },
+                objetivo: 'Mostrar turnos',
+                orden: 'desc'
+            };
+        }
+
+        // Función para ejecutar el plan de consulta generado por la IA
+        async function ejecutarPlanConsulta(plan) {
+            try {
+                console.log('🎯 Ejecutando plan:', plan);
+                
+                const response = await apiCall('registros.php');
+                if (!response.success || !response.data) {
+                    return 'Error al consultar la base de datos.';
+                }
+                
+                let registros = response.data;
+                
+                // Aplicar filtros de fecha
+                if (plan.periodo.fecha_inicio && plan.periodo.fecha_fin) {
+                    registros = registros.filter(registro => 
+                        registro.fecha >= plan.periodo.fecha_inicio && 
+                        registro.fecha <= plan.periodo.fecha_fin
+                    );
+                } else if (plan.periodo.fecha_inicio) {
+                    registros = registros.filter(registro => 
+                        registro.fecha >= plan.periodo.fecha_inicio
+                    );
+                } else if (plan.periodo.fecha_fin) {
+                    registros = registros.filter(registro => 
+                        registro.fecha <= plan.periodo.fecha_fin
+                    );
+                }
+                
+                // Aplicar filtros de unidades
+                if (plan.filtros.unidades && plan.filtros.unidades.length > 0) {
+                    registros = registros.filter(registro => 
+                        plan.filtros.unidades.includes(registro.unidad)
+                    );
+                }
+                
+                // Aplicar filtros de choferes
+                if (plan.filtros.choferes && plan.filtros.choferes.length > 0) {
+                    registros = registros.filter(registro => 
+                        plan.filtros.choferes.some(chofer => 
+                            (registro.chofer1Nombre && registro.chofer1Nombre.toLowerCase().includes(chofer.toLowerCase())) ||
+                            (registro.chofer2Nombre && registro.chofer2Nombre.toLowerCase().includes(chofer.toLowerCase()))
+                        )
+                    );
+                }
+                
+                console.log(`📊 Registros filtrados: ${registros.length}`);
+                
+                // Ejecutar análisis según el tipo
+                switch (plan.tipo_analisis) {
+                    case 'turnos_por_fecha':
+                        return analizarTurnosPorFecha(registros, plan);
+                        
+                    case 'turnos_por_unidad':
+                        return analizarTurnosPorUnidad(registros, plan);
+                        
+                    case 'estadisticas_chofer':
+                        return analizarEstadisticasChofer(registros, plan);
+                        
+                    case 'estadisticas_unidad':
+                        return analizarEstadisticasUnidad(registros, plan);
+                        
+                    case 'primer_turno_dia':
+                        return analizarPrimerTurno(registros, plan);
+                        
+                    case 'analisis_periodo':
+                        return analizarPeriodoComplejo(registros, plan);
+                        
+                    default:
+                        return analizarTurnosPorFecha(registros, plan);
+                }
+                
+            } catch (error) {
+                console.error('Error ejecutando plan:', error);
+                return 'Error al procesar la consulta.';
+            }
+        }
+
+        // Funciones de análisis específicas
+        function analizarTurnosPorFecha(registros, plan) {
+            if (registros.length === 0) {
+                return `No se encontraron registros para ${plan.periodo.descripcion}.`;
+            }
+            
+            let resultado = `TURNOS ${plan.periodo.descripcion.toUpperCase()}:\n`;
+            registros.forEach(registro => {
+                const turnoTexto = formatearTurnosSimple(registro);
+                resultado += `Unidad ${registro.unidad}: ${turnoTexto}\n`;
+            });
+            
+            return resultado;
+        }
+
+        function analizarPrimerTurno(registros, plan) {
+            const turnosPorFecha = {};
+            
+            // Función para convertir hora a minutos del día para comparación correcta
+            function horaAMinutos(hora, esTurno2 = false) {
+                const [horas, minutos] = hora.split(':').map(Number);
+                let horasAjustadas = horas;
+                
+                // Si es turno2 (tarde/noche) y la hora es menor a 12, es PM
+                if (esTurno2 && horas < 12) {
+                    horasAjustadas = horas + 12;
+                }
+                
+                return horasAjustadas * 60 + minutos;
+            }
+            
+            registros.forEach(registro => {
+                if (!turnosPorFecha[registro.fecha]) {
+                    turnosPorFecha[registro.fecha] = [];
+                }
+                
+                if (registro.salida1 && registro.chofer1Nombre) {
+                    turnosPorFecha[registro.fecha].push({
+                        unidad: registro.unidad,
+                        chofer: registro.chofer1Nombre,
+                        hora: registro.salida1,
+                        tipo: 'T1',
+                        minutos: horaAMinutos(registro.salida1, false)
+                    });
+                }
+                
+                if (registro.salida2 && registro.chofer2Nombre) {
+                    turnosPorFecha[registro.fecha].push({
+                        unidad: registro.unidad,
+                        chofer: registro.chofer2Nombre,
+                        hora: registro.salida2,
+                        tipo: 'T2',
+                        minutos: horaAMinutos(registro.salida2, true)
+                    });
+                }
+            });
+            
+            let resultado = `PRIMEROS TURNOS ${plan.periodo.descripcion.toUpperCase()}:\n`;
+            
+            for (const [fecha, turnos] of Object.entries(turnosPorFecha)) {
+                if (turnos.length > 0) {
+                    // Ordenar por minutos del día en lugar de comparación alfabética
+                    turnos.sort((a, b) => a.minutos - b.minutos);
+                    const primero = turnos[0];
+                    const horaFormateada = primero.tipo === 'T2' && primero.hora.split(':')[0] < 12 
+                        ? `${primero.hora} PM` 
+                        : primero.hora;
+                    resultado += `${fecha}: Unidad ${primero.unidad} - ${primero.chofer} a las ${horaFormateada}\n`;
+                }
+            }
+            
+            return resultado;
+        }
+
+        function analizarEstadisticasChofer(registros, plan) {
+            const conteoChoferes = {};
+            const detallesChoferes = {};
+            
+            // Función para calcular horas trabajadas entre dos horarios
+            function calcularHorasTrabajadas(salida, llegada, esTurno2 = false) {
+                if (!salida || !llegada) return 0;
+                
+                const [salidaHoras, salidaMinutos] = salida.split(':').map(Number);
+                const [llegadaHoras, llegadaMinutos] = llegada.split(':').map(Number);
+                
+                let salidaAjustada = salidaHoras;
+                let llegadaAjustada = llegadaHoras;
+                
+                // Si es turno2 (tarde) y la hora de salida es menor a 12, es PM
+                if (esTurno2 && salidaHoras < 12) {
+                    salidaAjustada = salidaHoras + 12;
+                }
+                
+                // Si la llegada es menor que la salida, es del día siguiente
+                if (llegadaAjustada < salidaAjustada) {
+                    llegadaAjustada += 24;
+                }
+                
+                const salidaEnMinutos = salidaAjustada * 60 + salidaMinutos;
+                const llegadaEnMinutos = llegadaAjustada * 60 + llegadaMinutos;
+                
+                const minutosTrabajas = llegadaEnMinutos - salidaEnMinutos;
+                return minutosTrabajas / 60; // Convertir a horas
+            }
+            
+            registros.forEach(registro => {
+                // Caso especial: mismo chofer en ambos turnos (turnos consecutivos)
+                if (registro.chofer1Nombre && registro.chofer1Nombre.trim() && 
+                    !registro.chofer2Nombre && registro.salida1 && registro.llegada2) {
+                    
+                    const nombre = registro.chofer1Nombre;
+                    conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                    
+                    if (!detallesChoferes[nombre]) {
+                        detallesChoferes[nombre] = { 
+                            unidades: new Set(), 
+                            fechas: new Set(),
+                            horasTotales: 0,
+                            turnos: []
+                        };
+                    }
+                    detallesChoferes[nombre].unidades.add(registro.unidad);
+                    detallesChoferes[nombre].fechas.add(registro.fecha);
+                    
+                    // Calcular desde salida1 hasta llegada2 (turno completo)
+                    const [salidaH, salidaM] = registro.salida1.split(':').map(Number);
+                    const [llegadaH, llegadaM] = registro.llegada2.split(':').map(Number);
+                    
+                    let llegadaAjustada = llegadaH;
+                    // Si llegada es menor que salida, es del día siguiente
+                    if (llegadaH < salidaH) {
+                        llegadaAjustada += 24;
+                    }
+                    
+                    const salidaEnMinutos = salidaH * 60 + salidaM;
+                    const llegadaEnMinutos = llegadaAjustada * 60 + llegadaM;
+                    const horasCompletas = (llegadaEnMinutos - salidaEnMinutos) / 60;
+                    
+                    detallesChoferes[nombre].horasTotales += horasCompletas;
+                    detallesChoferes[nombre].turnos.push({
+                        fecha: registro.fecha,
+                        unidad: registro.unidad,
+                        tipo: 'COMPLETO',
+                        salida: registro.salida1,
+                        llegada: registro.llegada2,
+                        horas: horasCompletas
+                    });
+                    
+                    return; // Salir para no procesar como turnos separados
+                }
+                
+                // Chofer 1 (procesamiento normal)
+                if (registro.chofer1Nombre && registro.chofer1Nombre.trim()) {
+                    const nombre = registro.chofer1Nombre;
+                    conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                    
+                    if (!detallesChoferes[nombre]) {
+                        detallesChoferes[nombre] = { 
+                            unidades: new Set(), 
+                            fechas: new Set(),
+                            horasTotales: 0,
+                            turnos: []
+                        };
+                    }
+                    detallesChoferes[nombre].unidades.add(registro.unidad);
+                    detallesChoferes[nombre].fechas.add(registro.fecha);
+                    
+                    // Calcular horas del turno 1
+                    const horasTurno1 = calcularHorasTrabajadas(registro.salida1, registro.llegada1, false);
+                    detallesChoferes[nombre].horasTotales += horasTurno1;
+                    detallesChoferes[nombre].turnos.push({
+                        fecha: registro.fecha,
+                        unidad: registro.unidad,
+                        tipo: 'T1',
+                        salida: registro.salida1,
+                        llegada: registro.llegada1,
+                        horas: horasTurno1
+                    });
+                }
+                
+                // Chofer 2 (procesamiento normal)
+                if (registro.chofer2Nombre && registro.chofer2Nombre.trim()) {
+                    const nombre = registro.chofer2Nombre;
+                    conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                    
+                    if (!detallesChoferes[nombre]) {
+                        detallesChoferes[nombre] = { 
+                            unidades: new Set(), 
+                            fechas: new Set(),
+                            horasTotales: 0,
+                            turnos: []
+                        };
+                    }
+                    detallesChoferes[nombre].unidades.add(registro.unidad);
+                    detallesChoferes[nombre].fechas.add(registro.fecha);
+                    
+                    // Calcular horas del turno 2
+                    const horasTurno2 = calcularHorasTrabajadas(registro.salida2, registro.llegada2, true);
+                    detallesChoferes[nombre].horasTotales += horasTurno2;
+                    detallesChoferes[nombre].turnos.push({
+                        fecha: registro.fecha,
+                        unidad: registro.unidad,
+                        tipo: 'T2',
+                        salida: registro.salida2,
+                        llegada: registro.llegada2,
+                        horas: horasTurno2
+                    });
+                }
+            });
+            
+            const choferesSorted = Object.entries(conteoChoferes)
+                .sort(([,a], [,b]) => plan.orden === 'asc' ? a - b : b - a);
+            
+            if (choferesSorted.length === 0) {
+                return `No se encontraron choferes para ${plan.periodo.descripcion}.`;
+            }
+            
+            let resultado = `ESTADÍSTICAS DE CHOFERES ${plan.periodo.descripcion.toUpperCase()}:\n`;
+            choferesSorted.slice(0, 5).forEach(([nombre, turnos], index) => {
+                const detalles = detallesChoferes[nombre];
+                const unidadesArray = Array.from(detalles.unidades).sort((a, b) => a - b);
+                const diasTrabajados = detalles.fechas.size;
+                const horasFormateadas = detalles.horasTotales.toFixed(1);
+                const promedioHorasPorDia = (detalles.horasTotales / diasTrabajados).toFixed(1);
+                
+                resultado += `${index + 1}. ${nombre}:\n`;
+                resultado += `   • ${turnos} turnos en ${diasTrabajados} días\n`;
+                resultado += `   • ${horasFormateadas} horas totales (${promedioHorasPorDia} hrs/día promedio)\n`;
+                resultado += `   • Unidades: ${unidadesArray.join(', ')}\n`;
+                
+                // Mostrar detalle de turnos más recientes
+                const turnosRecientes = detalles.turnos.slice(-3);
+                resultado += `   • Últimos turnos:\n`;
+                turnosRecientes.forEach(turno => {
+                    const horaSalida = turno.tipo === 'T2' && turno.salida.split(':')[0] < 12 
+                        ? `${turno.salida} PM` 
+                        : turno.salida;
+                    resultado += `     - ${turno.fecha}: ${horaSalida}-${turno.llegada} (${turno.horas.toFixed(1)}h) U${turno.unidad}\n`;
+                });
+                resultado += '\n';
+            });
+            
+            return resultado;
+        }
+
+        function analizarEstadisticasUnidad(registros, plan) {
+            const conteoUnidades = {};
+            
+            registros.forEach(registro => {
+                const unidad = registro.unidad;
+                if (!conteoUnidades[unidad]) {
+                    conteoUnidades[unidad] = { total: 0, turnos1: 0, turnos2: 0, choferes: new Set() };
+                }
+                
+                if (registro.chofer1Nombre && registro.chofer1Nombre.trim()) {
+                    conteoUnidades[unidad].total++;
+                    conteoUnidades[unidad].turnos1++;
+                    conteoUnidades[unidad].choferes.add(registro.chofer1Nombre);
+                }
+                
+                if (registro.chofer2Nombre && registro.chofer2Nombre.trim()) {
+                    conteoUnidades[unidad].total++;
+                    conteoUnidades[unidad].turnos2++;
+                    conteoUnidades[unidad].choferes.add(registro.chofer2Nombre);
+                }
+            });
+            
+            const unidadesSorted = Object.entries(conteoUnidades)
+                .sort(([,a], [,b]) => plan.orden === 'asc' ? a.total - b.total : b.total - a.total);
+            
+            if (unidadesSorted.length === 0) {
+                return `No se encontraron unidades activas para ${plan.periodo.descripcion}.`;
+            }
+            
+            let resultado = `ESTADÍSTICAS DE UNIDADES ${plan.periodo.descripcion.toUpperCase()}:\n`;
+            unidadesSorted.slice(0, 10).forEach(([unidad, datos], index) => {
+                resultado += `${index + 1}. Unidad ${unidad}: ${datos.total} turnos (T1:${datos.turnos1}, T2:${datos.turnos2}) - ${datos.choferes.size} choferes\n`;
+            });
+            
+            return resultado;
+        }
+
+        function analizarTurnosPorUnidad(registros, plan) {
+            if (registros.length === 0) {
+                return `No se encontraron registros para las unidades especificadas.`;
+            }
+            
+            const unidadesAgrupadas = {};
+            registros.forEach(registro => {
+                if (!unidadesAgrupadas[registro.unidad]) {
+                    unidadesAgrupadas[registro.unidad] = [];
+                }
+                unidadesAgrupadas[registro.unidad].push(registro);
+            });
+            
+            let resultado = `ANÁLISIS POR UNIDAD ${plan.periodo.descripcion.toUpperCase()}:\n`;
+            for (const [unidad, regs] of Object.entries(unidadesAgrupadas)) {
+                resultado += `\nUnidad ${unidad} (${regs.length} registros):\n`;
+                regs.forEach(registro => {
+                    resultado += `  ${registro.fecha}: ${formatearTurnosSimple(registro)}\n`;
+                });
+            }
+            
+            return resultado;
+        }
+
+        function analizarPeriodoComplejo(registros, plan) {
+            // Análisis general completo
+            let resultado = `ANÁLISIS COMPLETO ${plan.periodo.descripcion.toUpperCase()}:\n`;
+            resultado += `Total registros: ${registros.length}\n`;
+            
+            const unidadesUnicas = new Set(registros.map(r => r.unidad));
+            const choferesUnicos = new Set();
+            registros.forEach(r => {
+                if (r.chofer1Nombre) choferesUnicos.add(r.chofer1Nombre);
+                if (r.chofer2Nombre) choferesUnicos.add(r.chofer2Nombre);
+            });
+            
+            resultado += `Unidades activas: ${unidadesUnicas.size}\n`;
+            resultado += `Choferes trabajando: ${choferesUnicos.size}\n`;
+            
+            return resultado;
+        }
+
+        // Funciones del Chatbot
+        function inicializarChatbot() {
+            chatInput = document.getElementById('chat-input');
+            chatEnviar = document.getElementById('chat-enviar');
+            chatMensajes = document.getElementById('chat-mensajes');
+            const toggleConfig = document.getElementById('toggle-config');
+            const chatConfig = document.getElementById('chat-config');
+            const guardarConfig = document.getElementById('guardar-config');
+            
+            // Mostrar hora actual en el mensaje de bienvenida
+            document.getElementById('bot-time').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Cargar configuración guardada
+            cargarConfiguracion();
+            
+            // Event listeners
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    enviarMensajeBot();
+                }
+            });
+
+            // Event listeners para manejar el placeholder
+            chatInput.addEventListener('input', function() {
+                if (this.textContent.trim() === '') {
+                    this.classList.add('placeholder-visible');
+                } else {
+                    this.classList.remove('placeholder-visible');
+                }
+            });
+
+            chatInput.addEventListener('focus', function() {
+                this.classList.remove('placeholder-visible');
+            });
+
+            chatInput.addEventListener('blur', function() {
+                if (this.textContent.trim() === '') {
+                    this.classList.add('placeholder-visible');
+                }
+            });
+            
+            chatEnviar.addEventListener('click', enviarMensajeBot);
+            
+            toggleConfig.addEventListener('click', function() {
+                chatConfig.classList.toggle('hidden');
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+            
+            guardarConfig.addEventListener('click', guardarConfiguracion);
+            
+            // Event listener para limpiar historial
+            const limpiarHistorial = document.getElementById('limpiar-historial');
+            limpiarHistorial.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres limpiar todo el historial de conversación? Esta acción no se puede deshacer.')) {
+                    limpiarHistorialChat();
+                }
+            });
+            
+            // Funciones para consultas de base de datos del chatbot
+            async function buscarRegistrosPorFecha(fecha) {
+                try {
+                    const response = await apiCall('registros.php');
+                    if (response.success && response.data) {
+                        const registros = response.data.filter(registro => 
+                            registro.fecha === fecha
+                        );
+                        return registros;
+                    }
+                    return [];
+                } catch (error) {
+                    console.error('Error buscando registros por fecha:', error);
+                    return [];
+                }
+            }
+            
+            async function buscarRegistrosPorUnidad(numeroUnidad, fechaInicio = null, fechaFin = null) {
+                try {
+                    const response = await apiCall('registros.php');
+                    if (response.success && response.data) {
+                        let registros = response.data.filter(registro => 
+                            registro.unidad == numeroUnidad
+                        );
+                        
+                        if (fechaInicio && fechaFin) {
+                            registros = registros.filter(registro => 
+                                registro.fecha >= fechaInicio && registro.fecha <= fechaFin
+                            );
+                        } else if (fechaInicio) {
+                            registros = registros.filter(registro => 
+                                registro.fecha >= fechaInicio
+                            );
+                        }
+                        
+                        return registros;
+                    }
+                    return [];
+                } catch (error) {
+                    console.error('Error buscando registros por unidad:', error);
+                    return [];
+                }
+            }
+            
+            async function buscarRegistrosPorOperador(nombreOperador, fechaInicio = null, fechaFin = null) {
+                try {
+                    const response = await apiCall('registros.php');
+                    if (response.success && response.data) {
+                        let registros = response.data.filter(registro => 
+                            (registro.chofer1Nombre && registro.chofer1Nombre.toLowerCase().includes(nombreOperador.toLowerCase())) ||
+                            (registro.chofer2Nombre && registro.chofer2Nombre.toLowerCase().includes(nombreOperador.toLowerCase()))
+                        );
+                        
+                        if (fechaInicio && fechaFin) {
+                            registros = registros.filter(registro => 
+                                registro.fecha >= fechaInicio && registro.fecha <= fechaFin
+                            );
+                        } else if (fechaInicio) {
+                            registros = registros.filter(registro => 
+                                registro.fecha >= fechaInicio
+                            );
+                        }
+                        
+                        return registros;
+                    }
+                    return [];
+                } catch (error) {
+                    console.error('Error buscando registros por operador:', error);
+                    return [];
+                }
+            }
+            
+            async function buscarOperadores(filtro = '') {
+                try {
+                    const response = await apiCall('choferes.php');
+                    if (response.success && response.data) {
+                        if (filtro) {
+                            return response.data.filter(operador => 
+                                operador.nombre.toLowerCase().includes(filtro.toLowerCase())
+                            );
+                        }
+                        return response.data;
+                    }
+                    return [];
+                } catch (error) {
+                    console.error('Error buscando operadores:', error);
+                    return [];
+                }
+            }
+            
+            function formatearRegistroParaTexto(registro) {
+                const fecha = formatearFecha(registro.fecha);
+                let texto = `📅 Registro del ${fecha} - Unidad ${registro.numero_unidad}\n`;
+                
+                if (registro.operador_t1) {
+                    texto += `🌅 Turno 1 (6:00-18:00): ${registro.operador_t1}\n`;
+                    if (registro.hora_salida_t1 && registro.hora_llegada_t1) {
+                        texto += `   ⏰ Salida: ${registro.hora_salida_t1} - Llegada: ${registro.hora_llegada_t1}\n`;
+                        texto += `   ⌛ Horas trabajadas: ${registro.horas_t1 || 'No calculado'}\n`;
+                    }
+                }
+                
+                if (registro.operador_t2) {
+                    texto += `🌙 Turno 2 (18:00-6:00): ${registro.operador_t2}\n`;
+                    if (registro.hora_salida_t2 && registro.hora_llegada_t2) {
+                        texto += `   ⏰ Salida: ${registro.hora_salida_t2} - Llegada: ${registro.hora_llegada_t2}\n`;
+                        texto += `   ⌛ Horas trabajadas: ${registro.horas_t2 || 'No calculado'}\n`;
+                    }
+                }
+                
+                const totalTurnos = (registro.operador_t1 ? 1 : 0) + (registro.operador_t2 ? 1 : 0);
+                const totalHoras = parseFloat(registro.horas_t1 || 0) + parseFloat(registro.horas_t2 || 0);
+                
+                texto += `📊 Total turnos: ${totalTurnos} | Total horas: ${totalHoras.toFixed(1)}h\n`;
+                
+                // Estado del registro
+                const estado = (registro.operador_t1 && registro.operador_t2) ? 'Completo' : 
+                              (registro.operador_t1 || registro.operador_t2) ? 'Incompleto' : 'Sin registro';
+                texto += `🔰 Estado: ${estado}\n`;
+                
+                return texto;
+            }
+            
+            // Función para formatear turnos de manera simple e informal
+            function formatearTurnosSimple(registro) {
+                let texto = '';
+                
+                // Turno 1 (mañana) - usar chofer1Nombre
+                const tieneChofer1 = registro.chofer1Nombre && registro.chofer1Nombre.trim() !== '';
+                const tieneChofer2 = registro.chofer2Nombre && registro.chofer2Nombre.trim() !== '';
+                
+                if (tieneChofer1) {
+                    let horario1 = '';
+                    if (registro.salida1 && registro.llegada1) {
+                        horario1 = ` de ${registro.salida1} a ${registro.llegada1}`;
+                    } else if (registro.salida1) {
+                        horario1 = ` desde las ${registro.salida1}`;
+                    } else if (registro.llegada1) {
+                        horario1 = ` hasta las ${registro.llegada1}`;
+                    } else {
+                        horario1 = ' (turno mañana)';
+                    }
+                    
+                    texto += `${registro.chofer1Nombre}${horario1}`;
+                    if (tieneChofer2) {
+                        texto += ', ';
+                    }
+                }
+                
+                // Turno 2 (noche) - usar chofer2Nombre
+                if (tieneChofer2) {
+                    let horario2 = '';
+                    if (registro.salida2 && registro.llegada2) {
+                        horario2 = ` de ${registro.salida2} a ${registro.llegada2}`;
+                    } else if (registro.salida2) {
+                        horario2 = ` desde las ${registro.salida2}`;
+                    } else if (registro.llegada2) {
+                        horario2 = ` hasta las ${registro.llegada2}`;
+                    } else {
+                        horario2 = ' (turno noche)';
+                    }
+                    
+                    texto += `${registro.chofer2Nombre}${horario2}`;
+                }
+                
+                // Si no hay ningún turno
+                if (!tieneChofer1 && !tieneChofer2) {
+                    texto = 'No trabajó nadie ese día';
+                }
+                
+                return texto;
+            }
+            
+            // Función para que el LLM analice la consulta y genere un plan de búsqueda
+            async function analizarConsultaConIA(mensaje) {
+                try {
+                    const apiKey = localStorage.getItem('openai_api_key');
+                    if (!apiKey) {
+                        throw new Error('API Key de OpenAI no configurada');
+                    }
+                    
+                    const prompt = `Analiza esta consulta sobre turnos de mototaxis y genera un plan de búsqueda JSON:
+
+CONSULTA DEL USUARIO: "${mensaje}"
+
+INFORMACIÓN DEL SISTEMA:
+- 150 unidades numeradas del 1 al 150
+- Base de datos con registros que incluyen: fecha, unidad, chofer1Nombre, chofer2Nombre, salida1, llegada1, salida2, llegada2
+- Fecha actual: ${getFechaLocalISO()}
+- Modelo de IA: GPT-5 Nano
+
+TIPOS DE ANÁLISIS POSIBLES:
+1. "turnos_por_fecha" - Mostrar turnos de una fecha específica
+2. "turnos_por_unidad" - Mostrar turnos de una unidad específica
+3. "estadisticas_chofer" - Analizar qué chofer trabajó más
+4. "estadisticas_unidad" - Analizar qué unidades trabajaron más
+5. "primer_turno_dia" - Encontrar quién empezó primero un día
+6. "analisis_periodo" - Análisis complejo de un período
+
+Responde SOLO con un JSON válido con esta estructura:
+{
+  "tipo_analisis": "uno de los tipos de arriba",
+  "periodo": {
+    "fecha_inicio": "YYYY-MM-DD o null",
+    "fecha_fin": "YYYY-MM-DD o null",
+    "descripcion": "descripción del período"
+  },
+  "filtros": {
+    "unidades": [números de unidades específicas o null],
+    "choferes": ["nombres específicos o null"]
+  },
+  "objetivo": "descripción clara de qué buscar",
+  "orden": "asc o desc para ordenamiento"
+}`;
+
+                    // Intentar usar proxy seguro primero
+                    try {
+                        console.log('🔐 Análisis IA: Usando proxy seguro...');
+                        const proxyResponse = await fetch('api/openai-proxy.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                model: 'gpt-5-nano',
+                                messages: [{ role: 'user', content: prompt }],
+                                temperature: 0.1,
+                                max_tokens: 500
+                            })
+                        });
+
+                        if (proxyResponse.ok) {
+                            const data = await proxyResponse.json();
+                            const planTexto = data.choices[0].message.content.trim();
+                            
+                            // Limpiar el texto para extraer solo el JSON
+                            const jsonMatch = planTexto.match(/\{[\s\S]*\}/);
+                            if (jsonMatch) {
+                                const plan = JSON.parse(jsonMatch[0]);
+                                console.log('📋 Plan de consulta generado por IA (proxy):', plan);
+                                return plan;
+                            }
+                        } else {
+                            console.log('❌ Proxy falló para análisis IA');
+                        }
+                    } catch (proxyError) {
+                        console.log('⚠️ Proxy no disponible para análisis IA');
+                    }
+
+                    // Fallback a API directa
+                    const userApiKey = localStorage.getItem('openai_api_key');
+                    if (!userApiKey) {
+                        throw new Error('API Key de OpenAI no configurada y proxy no disponible');
+                    }
+
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${userApiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-5-nano',
+                            messages: [{ role: 'user', content: prompt }],
+                            temperature: 0.1,
+                            max_tokens: 500
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    const planTexto = data.choices[0].message.content.trim();
+                    
+                    // Limpiar el texto para extraer solo el JSON
+                    const jsonMatch = planTexto.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const plan = JSON.parse(jsonMatch[0]);
+                        console.log('📋 Plan de consulta generado por IA:', plan);
+                        return plan;
+                    } else {
+                        throw new Error('No se pudo extraer JSON válido de la respuesta');
+                    }
+                    
+                } catch (error) {
+                    console.error('Error analizando consulta con IA:', error);
+                    // Fallback al análisis manual básico
+                    return analizarConsultaManual(mensaje);
+                }
+            }
+            
+            // Función de fallback para análisis manual básico
+            function analizarConsultaManual(mensaje) {
+                const mensajeLower = mensaje.toLowerCase();
+                
+                // Análisis básico de fechas
+                let fechaInicio = null;
+                let fechaFin = null;
+                
+                if (mensajeLower.includes('hoy')) {
+                    fechaInicio = fechaFin = getFechaLocalISO();
+                } else if (mensajeLower.includes('ayer')) {
+                    const ayer = new Date();
+                    ayer.setDate(ayer.getDate() - 1);
+                    fechaInicio = fechaFin = ayer.toISOString().split('T')[0];
+                }
+                
+                // Detectar números de unidad
+                const unidadPattern = /unidad\s*(\d+)/gi;
+                const unidadMatches = mensaje.match(unidadPattern);
+                let unidades = null;
+                if (unidadMatches) {
+                    unidades = unidadMatches.map(match => {
+                        const numero = match.match(/(\d+)/);
+                        return numero ? parseInt(numero[1]) : null;
+                    }).filter(num => num !== null && num >= 1 && num <= 150);
+                }
+                
+                return {
+                    tipo_analisis: 'turnos_por_fecha',
+                    periodo: {
+                        fecha_inicio: fechaInicio,
+                        fecha_fin: fechaFin,
+                        descripcion: 'Consulta básica'
+                    },
+                    filtros: {
+                        unidades: unidades,
+                        choferes: null
+                    },
+                    objetivo: 'Mostrar turnos',
+                    orden: 'asc'
+                };
+            }
+            
+            // Función para ejecutar el plan de consulta generado por la IA
+            async function ejecutarPlanConsulta(plan) {
+                try {
+                    console.log('🎯 Ejecutando plan:', plan);
+                    
+                    const response = await apiCall('registros.php');
+                    if (!response.success || !response.data) {
+                        return 'Error al consultar la base de datos.';
+                    }
+                    
+                    let registros = response.data;
+                    
+                    // Aplicar filtros de fecha
+                    if (plan.periodo.fecha_inicio && plan.periodo.fecha_fin) {
+                        registros = registros.filter(registro => 
+                            registro.fecha >= plan.periodo.fecha_inicio && 
+                            registro.fecha <= plan.periodo.fecha_fin
+                        );
+                    } else if (plan.periodo.fecha_inicio) {
+                        registros = registros.filter(registro => 
+                            registro.fecha >= plan.periodo.fecha_inicio
+                        );
+                    } else if (plan.periodo.fecha_fin) {
+                        registros = registros.filter(registro => 
+                            registro.fecha <= plan.periodo.fecha_fin
+                        );
+                    }
+                    
+                    // Aplicar filtros de unidades
+                    if (plan.filtros.unidades && plan.filtros.unidades.length > 0) {
+                        registros = registros.filter(registro => 
+                            plan.filtros.unidades.includes(registro.unidad)
+                        );
+                    }
+                    
+                    // Aplicar filtros de choferes
+                    if (plan.filtros.choferes && plan.filtros.choferes.length > 0) {
+                        registros = registros.filter(registro => 
+                            plan.filtros.choferes.some(chofer => 
+                                (registro.chofer1Nombre && registro.chofer1Nombre.toLowerCase().includes(chofer.toLowerCase())) ||
+                                (registro.chofer2Nombre && registro.chofer2Nombre.toLowerCase().includes(chofer.toLowerCase()))
+                            )
+                        );
+                    }
+                    
+                    console.log(`📊 Registros filtrados: ${registros.length}`);
+                    
+                    // Ejecutar análisis según el tipo
+                    switch (plan.tipo_analisis) {
+                        case 'turnos_por_fecha':
+                            return analizarTurnosPorFecha(registros, plan);
+                            
+                        case 'turnos_por_unidad':
+                            return analizarTurnosPorUnidad(registros, plan);
+                            
+                        case 'estadisticas_chofer':
+                            return analizarEstadisticasChofer(registros, plan);
+                            
+                        case 'estadisticas_unidad':
+                            return analizarEstadisticasUnidad(registros, plan);
+                            
+                        case 'primer_turno_dia':
+                            return analizarPrimerTurno(registros, plan);
+                            
+                        case 'analisis_periodo':
+                            return analizarPeriodoComplejo(registros, plan);
+                            
+                        default:
+                            return analizarTurnosPorFecha(registros, plan);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error ejecutando plan:', error);
+                    return 'Error al procesar la consulta.';
+                }
+            }
+            
+            // Funciones de análisis específicas
+            function analizarTurnosPorFecha(registros, plan) {
+                if (registros.length === 0) {
+                    return `No se encontraron registros para ${plan.periodo.descripcion}.`;
+                }
+                
+                let resultado = `TURNOS ${plan.periodo.descripcion.toUpperCase()}:\n`;
+                registros.forEach(registro => {
+                    const turnoTexto = formatearTurnosSimple(registro);
+                    resultado += `Unidad ${registro.unidad}: ${turnoTexto}\n`;
+                });
+                
+                return resultado;
+            }
+            
+            function analizarTurnosPorUnidad(registros, plan) {
+                if (registros.length === 0) {
+                    return `No se encontraron registros para las unidades especificadas.`;
+                }
+                
+                const unidadesAgrupadas = {};
+                registros.forEach(registro => {
+                    if (!unidadesAgrupadas[registro.unidad]) {
+                        unidadesAgrupadas[registro.unidad] = [];
+                    }
+                    unidadesAgrupadas[registro.unidad].push(registro);
+                });
+                
+                let resultado = `ANÁLISIS POR UNIDAD ${plan.periodo.descripcion.toUpperCase()}:\n`;
+                for (const [unidad, regs] of Object.entries(unidadesAgrupadas)) {
+                    resultado += `\nUnidad ${unidad} (${regs.length} registros):\n`;
+                    regs.forEach(registro => {
+                        resultado += `  ${registro.fecha}: ${formatearTurnosSimple(registro)}\n`;
+                    });
+                }
+                
+                return resultado;
+            }
+            
+            function analizarEstadisticasChofer(registros, plan) {
+                const conteoChoferes = {};
+                const detallesChoferes = {};
+                
+                registros.forEach(registro => {
+                    // Chofer 1
+                    if (registro.chofer1Nombre && registro.chofer1Nombre.trim()) {
+                        const nombre = registro.chofer1Nombre;
+                        conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                        
+                        if (!detallesChoferes[nombre]) {
+                            detallesChoferes[nombre] = { unidades: new Set(), fechas: new Set() };
+                        }
+                        detallesChoferes[nombre].unidades.add(registro.unidad);
+                        detallesChoferes[nombre].fechas.add(registro.fecha);
+                    }
+                    
+                    // Chofer 2
+                    if (registro.chofer2Nombre && registro.chofer2Nombre.trim()) {
+                        const nombre = registro.chofer2Nombre;
+                        conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                        
+                        if (!detallesChoferes[nombre]) {
+                            detallesChoferes[nombre] = { unidades: new Set(), fechas: new Set() };
+                        }
+                        detallesChoferes[nombre].unidades.add(registro.unidad);
+                        detallesChoferes[nombre].fechas.add(registro.fecha);
+                    }
+                });
+                
+                const choferesSorted = Object.entries(conteoChoferes)
+                    .sort(([,a], [,b]) => plan.orden === 'asc' ? a - b : b - a);
+                
+                if (choferesSorted.length === 0) {
+                    return `No se encontraron choferes para ${plan.periodo.descripcion}.`;
+                }
+                
+                let resultado = `ESTADÍSTICAS DE CHOFERES ${plan.periodo.descripcion.toUpperCase()}:\n`;
+                choferesSorted.slice(0, 5).forEach(([nombre, turnos], index) => {
+                    const detalles = detallesChoferes[nombre];
+                    const unidadesArray = Array.from(detalles.unidades).sort((a, b) => a - b);
+                    const diasTrabajados = detalles.fechas.size;
+                    resultado += `${index + 1}. ${nombre}: ${turnos} turnos en ${diasTrabajados} días (Unidades: ${unidadesArray.join(', ')})\n`;
+                });
+                
+                return resultado;
+            }
+            
+            function analizarEstadisticasUnidad(registros, plan) {
+                const conteoUnidades = {};
+                
+                registros.forEach(registro => {
+                    const unidad = registro.unidad;
+                    if (!conteoUnidades[unidad]) {
+                        conteoUnidades[unidad] = { total: 0, turnos1: 0, turnos2: 0, choferes: new Set() };
+                    }
+                    
+                    if (registro.chofer1Nombre && registro.chofer1Nombre.trim()) {
+                        conteoUnidades[unidad].total++;
+                        conteoUnidades[unidad].turnos1++;
+                        conteoUnidades[unidad].choferes.add(registro.chofer1Nombre);
+                    }
+                    
+                    if (registro.chofer2Nombre && registro.chofer2Nombre.trim()) {
+                        conteoUnidades[unidad].total++;
+                        conteoUnidades[unidad].turnos2++;
+                        conteoUnidades[unidad].choferes.add(registro.chofer2Nombre);
+                    }
+                });
+                
+                const unidadesSorted = Object.entries(conteoUnidades)
+                    .sort(([,a], [,b]) => plan.orden === 'asc' ? a.total - b.total : b.total - a.total);
+                
+                if (unidadesSorted.length === 0) {
+                    return `No se encontraron unidades activas para ${plan.periodo.descripcion}.`;
+                }
+                
+                let resultado = `ESTADÍSTICAS DE UNIDADES ${plan.periodo.descripcion.toUpperCase()}:\n`;
+                unidadesSorted.slice(0, 10).forEach(([unidad, datos], index) => {
+                    resultado += `${index + 1}. Unidad ${unidad}: ${datos.total} turnos (T1:${datos.turnos1}, T2:${datos.turnos2}) - ${datos.choferes.size} choferes\n`;
+                });
+                
+                return resultado;
+            }
+            
+            function analizarPeriodoComplejo(registros, plan) {
+                // Análisis general completo
+                let resultado = `ANÁLISIS COMPLETO ${plan.periodo.descripcion.toUpperCase()}:\n`;
+                resultado += `Total registros: ${registros.length}\n`;
+                
+                const unidadesUnicas = new Set(registros.map(r => r.unidad));
+                const choferesUnicos = new Set();
+                registros.forEach(r => {
+                    if (r.chofer1Nombre) choferesUnicos.add(r.chofer1Nombre);
+                    if (r.chofer2Nombre) choferesUnicos.add(r.chofer2Nombre);
+                });
+                
+                resultado += `Unidades activas: ${unidadesUnicas.size}\n`;
+                resultado += `Choferes trabajando: ${choferesUnicos.size}\n`;
+                
+                return resultado;
+            }
+                const mensajeLower = mensaje.toLowerCase();
+                console.log('🔎 Analizando mensaje:', mensaje);
+                
+                // Detectar fechas relativas comunes
+                let fechasEncontradas = [];
+                const hoy = new Date();
+                
+                if (mensajeLower.includes('hoy')) {
+                    const fechaHoy = getFechaLocalISO();
+                    fechasEncontradas.push(fechaHoy);
+                    console.log('📅 Detectado "hoy":', fechaHoy);
+                }
+                if (mensajeLower.includes('ayer')) {
+                    const ayer = new Date();
+                    ayer.setDate(ayer.getDate() - 1);
+                    const fechaAyer = ayer.toISOString().split('T')[0];
+                    fechasEncontradas.push(fechaAyer);
+                    console.log('📅 Detectado "ayer":', fechaAyer);
+                }
+                
+                // Detectar rangos de tiempo para análisis
+                if (mensajeLower.includes('último mes') || mensajeLower.includes('ultimos 30 dias') || mensajeLower.includes('últimos 30 días')) {
+                    const hace30 = new Date();
+                    hace30.setDate(hace30.getDate() - 30);
+                    const fechaInicio = hace30.toISOString().split('T')[0];
+                    const fechaFin = getFechaLocalISO();
+                    fechasEncontradas.push(`RANGO:${fechaInicio}:${fechaFin}`);
+                    console.log('📅 Detectado "último mes":', fechaInicio, 'a', fechaFin);
+                }
+                
+                if (mensajeLower.includes('última semana') || mensajeLower.includes('ultimos 7 dias') || mensajeLower.includes('últimos 7 días') || 
+                    mensajeLower.includes('ultima semana') || mensajeLower.includes('la semana pasada')) {
+                    const hace7 = new Date();
+                    hace7.setDate(hace7.getDate() - 7);
+                    const fechaInicio = hace7.toISOString().split('T')[0];
+                    const fechaFin = getFechaLocalISO();
+                    fechasEncontradas.push(`RANGO:${fechaInicio}:${fechaFin}`);
+                    console.log('📅 Detectado "última semana":', fechaInicio, 'a', fechaFin);
+                }
+                
+                if (mensajeLower.includes('últimas 2 semanas') || mensajeLower.includes('ultimas 2 semanas') || 
+                    mensajeLower.includes('últimos 14 días') || mensajeLower.includes('ultimos 14 dias')) {
+                    const hace14 = new Date();
+                    hace14.setDate(hace14.getDate() - 14);
+                    const fechaInicio = hace14.toISOString().split('T')[0];
+                    const fechaFin = getFechaLocalISO();
+                    fechasEncontradas.push(`RANGO:${fechaInicio}:${fechaFin}`);
+                    console.log('📅 Detectado "últimas 2 semanas":', fechaInicio, 'a', fechaFin);
+                }
+                
+                // Detectar "últimos X días" genérico
+                const ultimosDiasPattern = /últimos?\s+(\d+)\s+d[ií]as?/gi;
+                const ultimosDiasMatch = mensaje.match(ultimosDiasPattern);
+                if (ultimosDiasMatch) {
+                    const dias = parseInt(ultimosDiasMatch[0].match(/\d+/)[0]);
+                    const haceX = new Date();
+                    haceX.setDate(haceX.getDate() - dias);
+                    const fechaInicio = haceX.toISOString().split('T')[0];
+                    const fechaFin = getFechaLocalISO();
+                    fechasEncontradas.push(`RANGO:${fechaInicio}:${fechaFin}`);
+                    console.log(`📅 Detectado "últimos ${dias} días":`, fechaInicio, 'a', fechaFin);
+                }
+                
+                // Detectar "hace X días"
+                const hacePattern = /hace\s+(\d+)\s+d[ií]as?/gi;
+                const haceMatch = mensaje.match(hacePattern);
+                if (haceMatch) {
+                    const dias = parseInt(haceMatch[0].match(/\d+/)[0]);
+                    const fecha = new Date();
+                    fecha.setDate(fecha.getDate() - dias);
+                    const fechaHace = fecha.toISOString().split('T')[0];
+                    fechasEncontradas.push(fechaHace);
+                    console.log(`📅 Detectado "hace ${dias} días":`, fechaHace);
+                }
+                
+                // Detectar fechas exactas (varios formatos)
+                const fechaPatterns = [
+                    /(\d{4}-\d{2}-\d{2})/g,           // YYYY-MM-DD
+                    /(\d{1,2}\/\d{1,2}\/\d{4})/g,    // DD/MM/YYYY
+                    /(\d{1,2}-\d{1,2}-\d{4})/g,      // DD-MM-YYYY
+                    /(\d{1,2}\/\d{1,2}\/\d{2})/g,    // DD/MM/YY
+                    /(\d{1,2}-\d{1,2}-\d{2})/g       // DD-MM-YY
+                ];
+                
+                fechaPatterns.forEach(pattern => {
+                    const matches = mensaje.match(pattern);
+                    if (matches) {
+                        console.log(`📅 Patrón ${pattern} encontró:`, matches);
+                        fechasEncontradas.push(...matches);
+                    }
+                });
+                
+                console.log('📋 Fechas detectadas finales:', fechasEncontradas);
+                
+                // Detectar números de unidad
+                const unidadPattern = /unidad\s*(\d+)/gi;
+                const unidadMatches = mensaje.match(unidadPattern);
+                let unidadesEncontradas = [];
+                if (unidadMatches) {
+                    unidadesEncontradas = unidadMatches.map(match => {
+                        const numero = match.match(/(\d+)/);
+                        return numero ? parseInt(numero[1]) : null;
+                    }).filter(num => num !== null && num >= 1 && num <= 150);
+                }
+                
+                // Detectar tipo de consulta
+                let tipoConsulta = 'turnos';
+                if (mensajeLower.includes('más ha trabajado') || mensajeLower.includes('mas ha trabajado') || 
+                    mensajeLower.includes('quien trabajo más') || mensajeLower.includes('quien trabajo mas')) {
+                    tipoConsulta = 'estadisticas_chofer';
+                    console.log('🔍 Detectada consulta estadística de chofer');
+                }
+                
+                return {
+                    fechas: fechasEncontradas,
+                    unidades: unidadesEncontradas,
+                    tipoConsulta: tipoConsulta
+                };
+            }
+            
+            // Función para determinar si una consulta requiere acceso a la base de datos
+            async function requiereBaseDatos(mensaje) {
+                try {
+                    // Obtener contexto de los últimos 4 mensajes para entender la conversación
+                    const contextoPrevio = historialChatbot.slice(-4).map(msg => 
+                        `${msg.role === 'user' ? 'Usuario' : 'Bot'}: ${msg.content}`
+                    ).join('\n');
+
+                    const prompt = `¡Órale! Analiza esta pregunta considerando el contexto previo y dime si necesito checar la base de datos de mototaxis.
+
+CONTEXTO PREVIO:
+${contextoPrevio}
+
+PREGUNTA ACTUAL: "${mensaje}"
+
+Responde SOLO "SI" o "NO":
+
+- "SI" si pregunta sobre:
+  * Turnos, horarios, fechas específicas o períodos
+  * Estadísticas de choferes, quién trabajó más/menos
+  * Info de unidades específicas o registros
+  * Continuación de consulta previa sobre datos (ej: "y en septiembre?" después de preguntar por agosto)
+
+- "NO" si es:
+  * Saludo casual (hola, qué onda, cómo estás)
+  * Pregunta personal (quién eres, qué haces)
+  * Plática general que no necesita datos
+
+Respuesta:`;
+
+                    const respuesta = await obtenerRespuestaOpenAI(prompt);
+                    const decision = respuesta.trim().toUpperCase();
+                    
+                    console.log('🤖 IA decidió sobre consulta DB:', decision);
+                    return decision === 'SI';
+                    
+                } catch (error) {
+                    console.error('Error analizando consulta:', error);
+                    // En caso de error, asumir que SÍ necesita DB por seguridad
+                    return true;
+                }
+            }
+
+            async function procesarConsultaBaseDatos(mensaje) {
+                console.log('🔍 Procesando consulta con IA:', mensaje);
+                
+                try {
+                    // Obtener contexto de los últimos mensajes para entender la conversación
+                    const contextoPrevio = historialChatbot.slice(-6).map(msg => 
+                        `${msg.role === 'user' ? 'Usuario' : 'Bot'}: ${msg.content.substring(0, 200)}`
+                    ).join('\n');
+
+                    // Crear mensaje con contexto
+                    const mensajeConContexto = contextoPrevio 
+                        ? `CONTEXTO PREVIO:\n${contextoPrevio}\n\nCONSULTA ACTUAL: ${mensaje}`
+                        : mensaje;
+
+                    // Usar IA para analizar la consulta y generar plan
+                    const plan = await analizarConsultaConIA(mensajeConContexto);
+                    
+                    if (plan) {
+                        // Ejecutar el plan generado por la IA
+                        const resultado = await ejecutarPlanConsulta(plan);
+                        return resultado;
+                    } else {
+                        return 'No pude entender la consulta. ¿Puedes ser más específico?';
+                    }
+                    
+                } catch (error) {
+                    console.error('Error procesando consulta con IA:', error);
+                    return 'Error al procesar la consulta.';
+                }
+            }
+            
+            // Función para analizar qué chofer trabajó más en un rango de fechas
+            async function analizarChoferMasTrabajador(fechaInicio, fechaFin) {
+                try {
+                    console.log(`📊 Analizando choferes desde ${fechaInicio} hasta ${fechaFin}`);
+                    
+                    const response = await apiCall('registros.php');
+                    if (!response.success || !response.data) {
+                        return 'Error al consultar la base de datos.';
+                    }
+                    
+                    // Filtrar registros en el rango de fechas
+                    const registrosEnRango = response.data.filter(registro => 
+                        registro.fecha >= fechaInicio && registro.fecha <= fechaFin
+                    );
+                    
+                    console.log(`📋 Registros en rango encontrados: ${registrosEnRango.length}`);
+                    
+                    // Contar turnos por chofer
+                    const conteoChoferes = {};
+                    const detallesChoferes = {};
+                    
+                    registrosEnRango.forEach(registro => {
+                        // Chofer 1
+                        if (registro.chofer1Nombre && registro.chofer1Nombre.trim()) {
+                            const nombre = registro.chofer1Nombre;
+                            conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                            
+                            if (!detallesChoferes[nombre]) {
+                                detallesChoferes[nombre] = { unidades: new Set(), fechas: new Set() };
+                            }
+                            detallesChoferes[nombre].unidades.add(registro.unidad);
+                            detallesChoferes[nombre].fechas.add(registro.fecha);
+                        }
+                        
+                        // Chofer 2
+                        if (registro.chofer2Nombre && registro.chofer2Nombre.trim()) {
+                            const nombre = registro.chofer2Nombre;
+                            conteoChoferes[nombre] = (conteoChoferes[nombre] || 0) + 1;
+                            
+                            if (!detallesChoferes[nombre]) {
+                                detallesChoferes[nombre] = { unidades: new Set(), fechas: new Set() };
+                            }
+                            detallesChoferes[nombre].unidades.add(registro.unidad);
+                            detallesChoferes[nombre].fechas.add(registro.fecha);
+                        }
+                    });
+                    
+                    // Encontrar el chofer con más turnos
+                    let choferGanador = null;
+                    let maxTurnos = 0;
+                    
+                    for (const [nombre, turnos] of Object.entries(conteoChoferes)) {
+                        if (turnos > maxTurnos) {
+                            maxTurnos = turnos;
+                            choferGanador = nombre;
+                        }
+                    }
+                    
+                    if (choferGanador) {
+                        const detalles = detallesChoferes[choferGanador];
+                        const unidadesArray = Array.from(detalles.unidades).sort((a, b) => a - b);
+                        const diasTrabajados = detalles.fechas.size;
+                        
+                        // Calcular período más amigable
+                        const fechaInicioObj = new Date(fechaInicio);
+                        const fechaFinObj = new Date(fechaFin);
+                        const diffTime = Math.abs(fechaFinObj - fechaInicioObj);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        let periodo = '';
+                        if (diffDays <= 7) {
+                            periodo = `última semana (${diffDays} días)`;
+                        } else if (diffDays <= 14) {
+                            periodo = `últimas 2 semanas (${diffDays} días)`;
+                        } else if (diffDays <= 30) {
+                            periodo = `último mes (${diffDays} días)`;
+                        } else {
+                            periodo = `últimos ${diffDays} días`;
+                        }
+                        
+                        let resultado = `CHOFER QUE MÁS TRABAJÓ en la ${periodo}:\n`;
+                        resultado += `🏆 ${choferGanador}: ${maxTurnos} turnos en ${diasTrabajados} días\n`;
+                        resultado += `🚗 Unidades: ${unidadesArray.join(', ')}\n`;
+                        
+                        // Top 3 choferes
+                        const top3 = Object.entries(conteoChoferes)
+                            .sort(([,a], [,b]) => b - a)
+                            .slice(0, 3);
+                        
+                        resultado += `\n📊 TOP 3:\n`;
+                        top3.forEach(([nombre, turnos], index) => {
+                            const dias = detallesChoferes[nombre].fechas.size;
+                            resultado += `${index + 1}. ${nombre}: ${turnos} turnos (${dias} días)\n`;
+                        });
+                        
+                        return resultado;
+                    } else {
+                        return `No se encontraron choferes trabajando entre ${fechaInicio} y ${fechaFin}.`;
+                    }
+                    
+                } catch (error) {
+                    console.error('Error analizando chofer más trabajador:', error);
+                    return 'Error al procesar estadísticas de choferes.';
+                }
+            }
+            
+            function normalizarFecha(fecha) {
+                // Convertir diferentes formatos de fecha a YYYY-MM-DD
+                if (fecha.includes('/')) {
+                    const partes = fecha.split('/');
+                    if (partes.length === 3) {
+                        let dia = partes[0].padStart(2, '0');
+                        let mes = partes[1].padStart(2, '0');
+                        let año = partes[2];
+                        
+                        // Manejar años de 2 dígitos (asumiendo 20XX para 00-99)
+                        if (año.length === 2) {
+                            año = '20' + año;
+                        }
+                        
+                        return `${año}-${mes}-${dia}`;
+                    }
+                }
+                if (fecha.includes('-')) {
+                    const partes = fecha.split('-');
+                    if (partes.length === 3) {
+                        let año = partes[0];
+                        let mes = partes[1];
+                        let dia = partes[2];
+                        
+                        // Si el primer componente es corto, podría ser DD-MM-YY
+                        if (año.length === 2 && dia.length === 2) {
+                            // DD-MM-YY -> intercambiar
+                            [dia, mes, año] = [año, mes, dia];
+                            año = '20' + año;
+                        }
+                        
+                        return `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+                    }
+                }
+                return fecha;
+            }
+            
+            async function enviarMensajeBot() {
+                const mensaje = chatInput.textContent.trim();
+                if (mensaje === '') return;
+                
+                // Deshabilitar input mientras se procesa
+                chatInput.contentEditable = false;
+                chatEnviar.disabled = true;
+                chatEnviar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+                
+                // Agregar mensaje del usuario
+                agregarMensaje('usuario', mensaje);
+                
+                // Guardar mensaje del usuario en el historial
+                historialChatbot.push({
+                    role: 'user',
+                    content: mensaje
+                });
+                
+                // Limpiar input
+                chatInput.textContent = '';
+                chatInput.classList.add('placeholder-visible');
+                
+                let respuestaFinal = '';
+                
+                try {
+                    console.log('Enviando mensaje:', mensaje);
+                    
+                    // 🤖 Usar IA para determinar si necesita consultar la base de datos
+                    console.log('🤖 Analizando si requiere consulta a DB...');
+                    chatEnviar.innerHTML = '<i class="fas fa-brain"></i> Analizando consulta...';
+                    
+                    const necesitaDB = await requiereBaseDatos(mensaje);
+                    
+                    let respuestaFinal = '';
+                    
+                    if (necesitaDB) {
+                        // Consulta requiere datos de la base de datos
+                        console.log('� IA determinó que requiere consulta DB - Buscando datos...');
+                        chatEnviar.innerHTML = '<i class="fas fa-database"></i> Consultando turnos...';
+                        
+                        const datosBaseDatos = await procesarConsultaBaseDatos(mensaje);
+                        
+                        if (datosBaseDatos && datosBaseDatos.trim()) {
+                            // Si encontramos datos de turnos, combinar con respuesta de IA
+                            const mensajeConDatos = `${mensaje}
+
+DATOS QUE ENCONTRÉ EN EL SISTEMA:
+${datosBaseDatos}
+
+Respóndeme al chile y cortito basándote en estos datos. Háblame como compa mexicano, nada formal.`;
+
+                            chatEnviar.innerHTML = '<i class="fas fa-robot"></i> Analizando turnos...';
+                            const respuestaIA = await obtenerRespuestaOpenAI(mensajeConDatos);
+                            respuestaFinal = respuestaIA;
+                        } else {
+                            // No encontramos datos, responder sobre consultas de turnos únicamente
+                            console.log('📝 No se encontraron datos, respondiendo sobre turnos...');
+                            chatEnviar.innerHTML = '<i class="fas fa-robot"></i> Respondiendo...';
+                            const respuestaIA = await obtenerRespuestaOpenAI(mensaje);
+                            respuestaFinal = respuestaIA;
+                        }
+                    } else {
+                        // Pregunta general - responder directamente sin analizar DB
+                        console.log('💬 IA determinó que NO requiere DB - Respondiendo directamente');
+                        chatEnviar.innerHTML = '<i class="fas fa-robot"></i> Respondiendo...';
+                        respuestaFinal = await obtenerRespuestaOpenAI(mensaje);
+                    }
+                    
+                    console.log('Respuesta final:', respuestaFinal);
+                    agregarMensaje('bot', respuestaFinal);
+                    
+                    // Guardar respuesta del bot en el historial
+                    historialChatbot.push({
+                        role: 'assistant',
+                        content: respuestaFinal
+                    });
+                    
+                    // Mantener solo los últimos 20 mensajes (10 intercambios)
+                    if (historialChatbot.length > 20) {
+                        historialChatbot = historialChatbot.slice(-20);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    const mensajeError = 'Lo siento, ha ocurrido un error. Por favor verifica tu configuración de API o la conexión a la base de datos.';
+                    agregarMensaje('bot', mensajeError, true);
+                    
+                    // Guardar respuesta de error en el historial
+                    historialChatbot.push({
+                        role: 'assistant',
+                        content: mensajeError
+                    });
+                }
+                
+                // Rehabilitar input
+                chatInput.contentEditable = true;
+                chatEnviar.disabled = false;
+                chatEnviar.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar';
+                chatInput.focus();
+            }
+            
+            function agregarMensaje(tipo, texto, esError = false) {
+                console.log('Agregando mensaje:', tipo, texto);
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                const mensajeDiv = document.createElement('div');
+                mensajeDiv.className = 'flex items-start gap-3 mb-4';
+                
+                if (tipo === 'usuario') {
+                    const avatarDiv = document.createElement('div');
+                    avatarDiv.className = 'w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm';
+                    avatarDiv.textContent = '👤';
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'flex-1';
+                    
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'flex items-center gap-2 mb-1';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'font-medium text-sm text-green-600';
+                    nameSpan.textContent = 'Tú';
+                    
+                    const timeSpan = document.createElement('span');
+                    timeSpan.className = 'text-xs text-gray-500';
+                    timeSpan.textContent = timeString;
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-gray-800';
+                    messageDiv.textContent = texto;
+                    
+                    headerDiv.appendChild(nameSpan);
+                    headerDiv.appendChild(timeSpan);
+                    contentDiv.appendChild(headerDiv);
+                    contentDiv.appendChild(messageDiv);
+                    mensajeDiv.appendChild(avatarDiv);
+                    mensajeDiv.appendChild(contentDiv);
+                } else {
+                    const bgClass = esError ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200';
+                    const textClass = esError ? 'text-red-600' : 'text-blue-600';
+                    
+                    const avatarDiv = document.createElement('div');
+                    avatarDiv.className = 'w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm';
+                    avatarDiv.textContent = '🤖';
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'flex-1';
+                    
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'flex items-center gap-2 mb-1';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = `font-medium text-sm ${textClass}`;
+                    nameSpan.textContent = 'Asistente Virtual';
+                    
+                    const timeSpan = document.createElement('span');
+                    timeSpan.className = 'text-xs text-gray-500';
+                    timeSpan.textContent = timeString;
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `${bgClass} border rounded-lg p-3 text-sm text-gray-800`;
+                    
+                    // Convertir saltos de línea a <br> y agregar el contenido
+                    if (texto.includes('\n')) {
+                        const lines = texto.split('\n');
+                        lines.forEach((line, index) => {
+                            if (index > 0) {
+                                messageDiv.appendChild(document.createElement('br'));
+                            }
+                            const textNode = document.createTextNode(line);
+                            messageDiv.appendChild(textNode);
+                        });
+                    } else {
+                        messageDiv.textContent = texto;
+                    }
+                    
+                    headerDiv.appendChild(nameSpan);
+                    headerDiv.appendChild(timeSpan);
+                    contentDiv.appendChild(headerDiv);
+                    contentDiv.appendChild(messageDiv);
+                    mensajeDiv.appendChild(avatarDiv);
+                    mensajeDiv.appendChild(contentDiv);
+                }
+                
+                chatMensajes.appendChild(mensajeDiv);
+                chatMensajes.scrollTop = chatMensajes.scrollHeight;
+            }
+            
+            async function obtenerRespuestaOpenAI(mensaje) {
+                const modelo = localStorage.getItem('openai_model') || 'gpt-5-nano';
+                
+                console.log('Modelo seleccionado:', modelo);
+                
+                // Configurar mensajes
+                const messages = [
+                    {
+                        role: 'system',
+                        content: `¡Órale! Soy tu cuate del sistema de mototaxis. Te ayudo con rollos de turnos y choferes, pero al chile y sin tanto pedo.
+
+🚕 LO QUE SÉ:
+- Turnos por unidad y fecha (nada más dime cuál)
+- Quién trabajó más o menos (te doy nombres y números)
+- Horarios reales de los compas
+
+📱 DATOS DEL JALE:
+- 150 unidades (del 1 al 150)
+- T1 = turno de día, T2 = turno de noche
+- Los horarios cambian según el chofer
+
+🗣️ MI ONDA:
+- Te hablo como compa mexicano, nada formal
+- Respuestas cortitas y al grano
+- Sin tanto rollo, directo al punto
+- Si hay datos de la base, te los paso claros
+- RECUERDO la conversación previa para dar continuidad
+
+EJEMPLOS:
+"Jenny jaló en la 78 de 5:10 a 2:30"
+"Esta semana Pedro fue el que más chambió, 8 turnos"
+"Ese día la 25 solo trabajó Carlos desde las 6:15"
+"Roberto anda rifando con 137 horas, ¡está cabrón!"
+
+IMPORTANTE: Si preguntan algo como "¿y en septiembre?" después de hablar de agosto en cierta unidad, ENTIENDO que siguen preguntando por la MISMA UNIDAD pero en septiembre.
+
+¡Dale, pregúntame lo que necesites!`
+                    }
+                ];
+                
+                // Agregar historial de conversación (mantener los últimos 10 mensajes para no sobrecargar)
+                const historialReciente = historialChatbot.slice(-10);
+                messages.push(...historialReciente);
+                
+                // Agregar el mensaje actual del usuario
+                messages.push({
+                    role: 'user',
+                    content: mensaje
+                });
+                
+                const requestBody = {
+                    model: modelo,
+                    messages: messages
+                };
+
+                // Agregar parámetros específicos según el modelo
+                if (modelo.startsWith('gpt-5') || modelo.includes('o1')) {
+                    // Para GPT-5 y modelos o1, sin límite de tokens
+                    // No agregar max_completion_tokens para permitir respuestas largas
+                } else {
+                    // Para modelos anteriores, usar temperature pero sin límite de tokens
+                    requestBody.temperature = 0.7;
+                    // No agregar max_tokens para permitir respuestas largas
+                }
+                
+                console.log('Request body:', requestBody);
+                
+                // Intentar usar proxy seguro primero
+                try {
+                    console.log('🔐 Intentando usar proxy seguro...');
+                    const proxyResponse = await fetch('api/openai-proxy.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (proxyResponse.ok) {
+                        const data = await proxyResponse.json();
+                        console.log('✅ Respuesta desde proxy seguro:', data);
+                        
+                        if (data.choices && data.choices[0] && data.choices[0].message) {
+                            const mensaje = data.choices[0].message;
+                            console.log('Mensaje de la API:', mensaje);
+                            console.log('Contenido del mensaje:', mensaje.content);
+                            console.log('Finish reason:', data.choices[0].finish_reason);
+                            return mensaje.content;
+                        }
+                        throw new Error('Respuesta de API inválida desde proxy');
+                    } else {
+                        console.log('❌ Proxy falló, intentando API directa...');
+                    }
+                } catch (proxyError) {
+                    console.log('⚠️ Proxy no disponible:', proxyError.message);
+                }
+
+                // Fallback a API directa si el proxy no funciona
+                const apiKey = localStorage.getItem('openai_api_key');
+                if (!apiKey) {
+                    throw new Error('API Key no configurada y proxy no disponible. Configura tu API Key en Configuración o contacta al administrador para habilitar el proxy seguro.');
+                }
+                
+                console.log('🔑 Usando API directa con key del usuario...');
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    console.error('Error de API:', error);
+                    throw new Error(error.error?.message || 'Error en la API de OpenAI');
+                }
+                
+                const data = await response.json();
+                console.log('Respuesta completa de API:', data);
+                
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error('Respuesta de API inválida');
+                }
+                
+                console.log('Mensaje de la API:', data.choices[0].message);
+                console.log('Contenido del mensaje:', data.choices[0].message.content);
+                console.log('Finish reason:', data.choices[0].finish_reason);
+                
+                const content = data.choices[0].message.content;
+                const finishReason = data.choices[0].finish_reason;
+                
+                // Solo verificar que hay contenido, sin restricciones por finish_reason
+                if (!content || content.trim() === '') {
+                    console.warn('⚠️ El contenido está vacío, revisando respuesta completa...');
+                    console.log('Choices[0] completo:', JSON.stringify(data.choices[0], null, 2));
+                    return `Lo siento, la respuesta del modelo está vacía. Finish reason: ${finishReason}. Intenta reformular tu pregunta de manera más específica.`;
+                }
+                
+                // Devolver el contenido completo sin importar el finish_reason
+                return content;
+            }
+            
+            function cargarConfiguracion() {
+                const apiKey = localStorage.getItem('openai_api_key');
+                const modelo = localStorage.getItem('openai_model') || 'gpt-5-nano';
+                
+                if (apiKey) {
+                    document.getElementById('openai-api-key').value = apiKey;
+                }
+                
+                // Asegurar que siempre esté configurado GPT-5 Nano
+                document.getElementById('openai-model').value = 'gpt-5-nano';
+                if (!localStorage.getItem('openai_model')) {
+                    localStorage.setItem('openai_model', 'gpt-5-nano');
+                }
+            }
+            
+            function guardarConfiguracion() {
+                const apiKey = document.getElementById('openai-api-key').value.trim();
+                
+                if (apiKey) {
+                    localStorage.setItem('openai_api_key', apiKey);
+                    localStorage.setItem('openai_model', 'gpt-5-nano'); // Siempre GPT-5 Nano
+                    
+                    // Mostrar confirmación
+                    const btn = document.getElementById('guardar-config');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check mr-2"></i> Guardado!';
+                    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    btn.classList.add('bg-green-500');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.remove('bg-green-500');
+                        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                    }, 2000);
+                } else {
+                    alert('Por favor ingresa tu API Key de OpenAI');
+                }
+            }
+            
+            function limpiarHistorialChat() {
+                // Limpiar el historial de conversación
+                historialChatbot = [];
+                
+                // Limpiar visualmente el chat
+                const chatMessages = document.getElementById('chat-messages');
+                chatMessages.innerHTML = '';
+                
+                // Agregar mensaje de bienvenida
+                agregarMensaje('bot', '¡Hola! Soy tu asistente para consultar turnos y horarios de mototaxis. Mi historial de conversación ha sido limpiado. Pregúntame sobre los turnos de cualquier unidad en fechas específicas. ¿Qué quieres saber?');
+                
+                console.log('Historial de chat limpiado');
+            }
+
+        // Inicializar chatbot cuando se carga la página
+        inicializarChatbot();
+        
+        // Función de prueba temporal para verificar que todo funciona
+        window.testearConsultaFecha = async function(fecha) {
+            console.log('🧪 Testeando consulta de fecha:', fecha);
+            const fechaNormalizada = normalizarFecha ? normalizarFecha(fecha) : fecha;
+            console.log('📅 Fecha normalizada:', fechaNormalizada);
+            
+            try {
+                if (typeof buscarRegistrosPorFecha === 'function') {
+                    const registros = await buscarRegistrosPorFecha(fechaNormalizada);
+                    console.log('📊 Registros encontrados:', registros.length);
+                    console.log('📋 Primeros 3 registros:', registros.slice(0, 3));
+                    return registros;
+                } else {
+                    console.error('❌ Función buscarRegistrosPorFecha no disponible');
+                }
+            } catch (error) {
+                console.error('❌ Error en prueba:', error);
+            }
+        };
+        
+        // Función para probar normalización de fechas
+        window.testearNormalizacionFecha = function(fecha) {
+            console.log('🧪 Testeando normalización de fecha:', fecha);
+            const resultado = normalizarFecha ? normalizarFecha(fecha) : 'Función no disponible';
+            console.log('📅 Resultado:', resultado);
+            return resultado;
+        };
+        
+        // Test específico para la fecha del problema
+        console.log('🔧 Probando conversión de fecha 06/09/25:');
+        if (typeof normalizarFecha === 'function') {
+            const fechaConvertida = normalizarFecha('06/09/25');
+            console.log('✅ 06/09/25 se convierte a:', fechaConvertida);
+        }
+        
+        // Test específico para consulta de "ayer"
+        window.testearConsultaAyer = async function() {
+            console.log('🧪 Testeando consulta de "ayer"');
+            
+            // 1. Verificar qué fecha es "ayer"
+            const ayer = new Date();
+            ayer.setDate(ayer.getDate() - 1);
+            const fechaAyer = ayer.toISOString().split('T')[0];
+            console.log('📅 Fecha de ayer calculada:', fechaAyer);
+            
+            // 2. Buscar registros directamente
+            try {
+                const registros = await buscarRegistrosPorFecha(fechaAyer);
+                console.log('📊 Total registros encontrados para ayer:', registros.length);
+                console.log('📋 Primeros 3 registros:', registros.slice(0, 3));
+                
+                // 3. Probar formateo
+                if (registros.length > 0) {
+                    const ejemplo = formatearTurnosSimple(registros[0]);
+                    console.log('📝 Ejemplo de formateo:', ejemplo);
+                }
+                
+                return registros;
+            } catch (error) {
+                console.error('❌ Error en prueba:', error);
+            }
+        };
     </script>
     <script>
         (function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'958018ca9776aec5',t:'MTc1MTMxMjAyMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();
