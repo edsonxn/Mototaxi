@@ -48,7 +48,7 @@ Sistema web completo para el control y gestión de unidades de mototaxis, desarr
 4. **Los archivos JSON se crean automáticamente** en el primer uso
 
 ### 1. **Control de Turnos**
-- Búsqueda rápida de unidades (1-150)
+- Búsqueda rápida de unidades (1-200)
 - Registro de horarios de entrada y salida
 - Asignación de hasta 2 conductores por turno
 - Cálculo automático de horas trabajadas
@@ -62,7 +62,7 @@ Sistema web completo para el control y gestión de unidades de mototaxis, desarr
 - Validación de nombres únicos
 
 ### 3. **Tabla de Unidades**
-- Vista completa de todas las 150 unidades
+- Vista completa de las 200 unidades
 - Filtros: todas, con registro, sin registro, incompletas
 - Edición directa desde la tabla
 - Creación rápida de nuevos registros
@@ -76,7 +76,13 @@ Sistema web completo para el control y gestión de unidades de mototaxis, desarr
 - Exportación a PDF y CSV
 - Filtros por rangos de fechas
 
-## 💾 Gestión de Datos
+## � Roles de Usuario
+
+- **Administrador**: Acceso total al sistema, incluido el panel de seguridad y la administración de usuarios.
+- **Operador**: Gestión completa de turnos, unidades y operadores.
+- **Consultor**: Acceso de solo lectura a la pestaña de reportes para consultar y exportar información.
+
+## �💾 Gestión de Datos
 
 ### Archivos JSON
 - `choferes.json`: Base de datos de conductores

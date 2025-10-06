@@ -29,8 +29,9 @@
 ### Credenciales Seguras
 | Usuario | Contraseña | Hash bcrypt | Rol |
 |---------|------------|-------------|-----|
-| `admin` | `admin123` | `$2y$10$eImiTXuWVxfM37uY4JANjOOkFNKaOFb0aCjrA8xB4xRDU7vP3dWDm` | Administrador |
-| `operador` | `admin123` | `$2y$10$eImiTXuWVxfM37uY4JANjOOkFNKaOFb0aCjrA8xB4xRDU7vP3dWDm` | Usuario |
+| `admin` | `MotoTaxi2025!` | `*Generar hash bcrypt antes de producción*` | Administrador |
+| `operador` | `Operador2025#` | `*Generar hash bcrypt antes de producción*` | Operador |
+| `consultor` | `Consultor2025$` | `*Generar hash bcrypt antes de producción*` | Consultor |
 
 ### ⚠️ Recomendaciones Críticas
 1. **Cambiar contraseñas por defecto** inmediatamente en producción
@@ -81,7 +82,7 @@ $admin_password = $_ENV['ADMIN_PASSWORD'] ?? 'admin123';
 ## 🔄 Buenas Prácticas Implementadas
 
 ### 1. Principio de Menor Privilegio
-- Roles diferenciados (admin/user)
+- Roles diferenciados (admin/operador/consultor)
 - Validación de permisos por endpoint
 - Separación de responsabilidades
 

@@ -1620,7 +1620,7 @@
                                 </label>
                                 <input
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="search-unidad" placeholder="Número de unidad (1-150)" type="number" />
+                                    id="search-unidad" placeholder="Número de unidad (1-200)" type="number" />
                             </div>
                             <div class="w-full md:w-64">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -2148,6 +2148,12 @@
                 </div>
             </div>
             <div class="tab-content hidden" id="content-reportes">
+                <div class="hidden mb-4 p-4 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg" id="consultor-notice">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-info-circle"></i>
+                        <p class="text-sm">Modo consultor activo: solo tienes acceso de lectura a los reportes.</p>
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <div class="flex space-x-2 mb-4" id="exportar-diario">
@@ -2491,7 +2497,7 @@
                             </label>
                             <input
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                id="numero-unidad-reporte" placeholder="Número de unidad (1-150)" type="number" min="1" max="150" />
+                                id="numero-unidad-reporte" placeholder="Número de unidad (1-200)" type="number" min="1" max="200" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -2624,7 +2630,7 @@
                                         <ul class="mt-2 space-y-1">
                                             <li>• "¿Qué turno tuvo la unidad 78 ayer?"</li>
                                             <li>• "¿Quién trabajó más en la última semana?"</li>
-                                            <li>• "Turnos de hoy en la unidad 150"</li>
+                                            <li>• "Turnos de hoy en la unidad 200"</li>
                                             <li>• "¿Quién trabajó más en el último mes?"</li>
                                         </ul>
                                         ¿Qué turnos quieres consultar?
@@ -2745,12 +2751,13 @@
 
     <script>
         // Variables globales
-        let registroActual = null;
-        let registroAEliminar = null;
-        let choferes = [];
+    let registroActual = null;
+    let registroAEliminar = null;
+    let choferes = [];
         
-        // Variable para almacenar el historial del chatbot
-        let historialChatbot = [];
+    // Variable para almacenar el historial del chatbot
+    let historialChatbot = [];
+    let currentUserRole = null;
 
         // Configuración de la API
         const API_BASE_URL = 'https://hclicknbusiness.com/Mototaxis/api/';
@@ -2850,14 +2857,87 @@
             }
         }
 
+        function aplicarPermisosPorRol(user) {
+            currentUserRole = (user && user.role) ? user.role.toLowerCase() : null;
+
+            if (currentUserRole !== 'consultor') {
+                // Asegurar que pestañas restringidas estén visibles para otros roles
+                ['tab-control', 'tab-unidades', 'tab-choferes', 'tab-chat', 'mobile-tab-control', 'mobile-tab-unidades', 'mobile-tab-choferes', 'mobile-tab-chat'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.classList.remove('hidden');
+                        el.removeAttribute('aria-hidden');
+                        el.removeAttribute('disabled');
+                    }
+                });
+                return;
+            }
+
+            // Ocultar pestañas no permitidas
+            ['tab-control', 'tab-unidades', 'tab-choferes', 'tab-chat'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.setAttribute('aria-hidden', 'true');
+                    el.setAttribute('disabled', 'true');
+                    el.classList.remove('tab-active');
+                }
+            });
+
+            ['mobile-tab-control', 'mobile-tab-unidades', 'mobile-tab-choferes', 'mobile-tab-chat'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.setAttribute('aria-hidden', 'true');
+                    el.setAttribute('disabled', 'true');
+                    el.classList.remove('tab-active');
+                }
+            });
+
+            // Asegurar que solo la pestaña de reportes esté visible y activa
+            document.querySelectorAll('button[id^="tab-"]').forEach(btn => btn.classList.remove('tab-active'));
+            document.querySelectorAll('button[id^="mobile-tab-"]').forEach(btn => btn.classList.remove('tab-active'));
+
+            const reportTab = document.getElementById('tab-reportes');
+            if (reportTab) {
+                reportTab.classList.remove('hidden');
+                reportTab.classList.add('tab-active');
+            }
+
+            const mobileReportTab = document.getElementById('mobile-tab-reportes');
+            if (mobileReportTab) {
+                mobileReportTab.classList.remove('hidden');
+                mobileReportTab.classList.add('tab-active');
+            }
+
+            // Mostrar solo el contenido de reportes
+            ['content-control', 'content-unidades', 'content-choferes', 'content-chat'].forEach(id => {
+                const content = document.getElementById(id);
+                if (content) {
+                    content.classList.add('hidden');
+                }
+            });
+
+            const reportContent = document.getElementById('content-reportes');
+            if (reportContent) {
+                reportContent.classList.remove('hidden');
+            }
+
+            // Mostrar mensaje informativo si existe contenedor
+            const noticeContainer = document.getElementById('consultor-notice');
+            if (noticeContainer) {
+                noticeContainer.classList.remove('hidden');
+            }
+        }
+
         function getFechaLocalISO() {
             const fecha = new Date();
             const offset = fecha.getTimezoneOffset();
             const local = new Date(fecha.getTime() - offset * 60 * 1000);
             return local.toISOString().split('T')[0];
         }
-        const fechaHoy = getFechaLocalISO();
-        const TOTAL_UNIDADES = 150; // Total de unidades disponibles
+    const fechaHoy = getFechaLocalISO();
+    const TOTAL_UNIDADES = 200; // Total de unidades disponibles
 
         // Inicializar la conexión con la API (reemplaza IndexedDB)
         async function inicializarDB() {
@@ -3165,8 +3245,8 @@
         async function buscarUnidad() {
             const numeroUnidad = parseInt(document.getElementById('search-unidad').value);
 
-            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 150) {
-                alert('Por favor, ingresa un número de unidad válido (1-150)');
+            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 200) {
+                alert('Por favor, ingresa un número de unidad válido (1-200)');
                 return;
             }
 
@@ -3437,8 +3517,8 @@
         async function guardarRegistro() {
             const numeroUnidad = parseInt(document.getElementById('unidad-numero').textContent);
 
-            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 150) {
-                alert('Por favor, ingresa un número de unidad válido (1-150)');
+            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 200) {
+                alert('Por favor, ingresa un número de unidad válido (1-200)');
                 return;
             }
 
@@ -3602,7 +3682,7 @@
                 let unidades = [];
 
                 if (filtro === 'todas') {
-                    // Mostrar todas las unidades (1-150)
+                    // Mostrar todas las unidades (1-200)
                     for (let i = 1; i <= TOTAL_UNIDADES; i++) {
                         unidades.push(i);
                     }
@@ -4257,8 +4337,8 @@
                 return;
             }
 
-            if (numeroUnidad < 1 || numeroUnidad > 150) {
-                alert('El número de unidad debe estar entre 1 y 150');
+            if (numeroUnidad < 1 || numeroUnidad > 200) {
+                alert('El número de unidad debe estar entre 1 y 200');
                 return;
             }
 
@@ -4575,6 +4655,8 @@
                     if (data.user.role === 'admin') {
                         document.getElementById('admin-btn').classList.remove('hidden');
                     }
+
+                    aplicarPermisosPorRol(data.user);
                 }
                 
                 return true;
@@ -5349,7 +5431,7 @@ function limpiarFormularioChofer() {
 CONSULTA DEL USUARIO: "${mensaje}"
 
 INFORMACIÓN DEL SISTEMA:
-- 150 unidades numeradas del 1 al 150
+- 200 unidades numeradas del 1 al 200
 - Base de datos con registros que incluyen: fecha, unidad, chofer1Nombre, chofer2Nombre, salida1, llegada1, salida2, llegada2
 - Fecha actual: ${getFechaLocalISO()}
 
@@ -5439,7 +5521,7 @@ Responde SOLO con un JSON válido con esta estructura:
                 unidades = unidadMatches.map(match => {
                     const numero = match.match(/(\d+)/);
                     return numero ? parseInt(numero[1]) : null;
-                }).filter(num => num !== null && num >= 1 && num <= 150);
+                }).filter(num => num !== null && num >= 1 && num <= 200);
             }
             
             // Detectar nombres de choferes comunes
@@ -6126,7 +6208,7 @@ Responde SOLO con un JSON válido con esta estructura:
 CONSULTA DEL USUARIO: "${mensaje}"
 
 INFORMACIÓN DEL SISTEMA:
-- 150 unidades numeradas del 1 al 150
+- 200 unidades numeradas del 1 al 200
 - Base de datos con registros que incluyen: fecha, unidad, chofer1Nombre, chofer2Nombre, salida1, llegada1, salida2, llegada2
 - Fecha actual: ${getFechaLocalISO()}
 - Modelo de IA: GPT-5 Nano
@@ -6253,7 +6335,7 @@ Responde SOLO con un JSON válido con esta estructura:
                     unidades = unidadMatches.map(match => {
                         const numero = match.match(/(\d+)/);
                         return numero ? parseInt(numero[1]) : null;
-                    }).filter(num => num !== null && num >= 1 && num <= 150);
+                    }).filter(num => num !== null && num >= 1 && num <= 200);
                 }
                 
                 return {
@@ -6592,7 +6674,7 @@ Responde SOLO con un JSON válido con esta estructura:
                     unidadesEncontradas = unidadMatches.map(match => {
                         const numero = match.match(/(\d+)/);
                         return numero ? parseInt(numero[1]) : null;
-                    }).filter(num => num !== null && num >= 1 && num <= 150);
+                    }).filter(num => num !== null && num >= 1 && num <= 200);
                 }
                 
                 // Detectar tipo de consulta
@@ -7033,7 +7115,7 @@ Respóndeme al chile y cortito basándote en estos datos. Háblame como compa me
 - Horarios reales de los compas
 
 📱 DATOS DEL JALE:
-- 150 unidades (del 1 al 150)
+- 200 unidades (del 1 al 200)
 - T1 = turno de día, T2 = turno de noche
 - Los horarios cambian según el chofer
 

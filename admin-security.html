@@ -3,151 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Seguridad - Control de Mototaxis</title>
+    <title>Centro de Seguridad · Control de Mototaxis</title>
     <style>
+        :root {
+            color-scheme: light;
+            --surface: #ffffff;
+            --surface-alt: #f8fafc;
+            --border: #d0d7de;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --warning-bg: #fff7ed;
+            --warning-border: #fed7aa;
+            --warning-text: #9a3412;
+            --text-strong: #1f2937;
+            --text-muted: #64748b;
+            --danger: #be123c;
+            --success: #047857;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+            color: var(--text-strong);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1080px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            padding: 48px 24px 64px;
         }
 
-        .header {
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            color: white;
-            padding: 30px;
-            text-align: center;
+        .page-header h1 {
+            margin: 0;
+            font-size: 2.25rem;
+            font-weight: 700;
         }
 
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .section {
-            margin-bottom: 40px;
-            padding: 30px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            border-left: 5px solid #4ECDC4;
-        }
-
-        .section h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        input[type="text"], input[type="password"], select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #4ECDC4;
-            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #4ECDC4, #44A08D);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-        }
-
-        .result.success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-
-        .result.error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .users-table th,
-        .users-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .users-table th {
-            background: #f8f9fa;
-            font-weight: 600;
+        .page-header p {
+            margin: 8px 0 0;
+            color: var(--text-muted);
+            font-size: 1rem;
         }
 
         .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #4ECDC4;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 32px 0 18px;
+            color: var(--primary);
             text-decoration: none;
             font-weight: 600;
         }
@@ -156,145 +64,406 @@
             text-decoration: underline;
         }
 
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 15px;
+        .status-banner {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-text);
+            padding: 18px 20px;
+            border-radius: 14px;
+            font-weight: 500;
+        }
+
+        .status-banner strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .actions-grid {
+            margin: 28px 0 32px;
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(37, 99, 235, 0.08);
+            box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.45);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .muted {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface-alt);
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            background: #fff;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--primary);
+            border: none;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px -12px rgba(37, 99, 235, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn.secondary {
+            background: rgba(37, 99, 235, 0.12);
+            color: var(--primary-dark);
+        }
+
+        .btn.secondary:hover {
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--primary);
+        }
+
+        .feedback {
+            margin: 4px 0 0;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+        }
+
+        .feedback.success {
+            background: #ecfdf5;
+            border-color: rgba(34, 197, 94, 0.45);
+            color: var(--success);
+        }
+
+        .feedback.error {
+            background: #fff1f2;
+            border-color: rgba(244, 63, 94, 0.45);
+            color: var(--danger);
+        }
+
+        .feedback.info {
+            background: #f8fafc;
+            border-color: rgba(148, 163, 184, 0.45);
+            color: #334155;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 640px;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+            text-align: left;
+        }
+
+        .users-table thead {
+            background: rgba(226, 232, 240, 0.5);
+        }
+
+        .users-table tbody tr:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .role-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-dark);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .role-tag.role-admin { background: rgba(248, 113, 113, 0.18); color: #b91c1c; }
+        .role-tag.role-operador { background: rgba(16, 185, 129, 0.18); color: #047857; }
+        .role-tag.role-consultor { background: rgba(14, 165, 233, 0.18); color: #0369a1; }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            margin: 24px 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 18px 48px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .users-table {
+                min-width: 520px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔐 Administración de Seguridad</h1>
-            <p>Gestión de contraseñas y usuarios del sistema</p>
+    <main class="container">
+        <header class="page-header">
+            <h1>🔐 Centro de Seguridad</h1>
+            <p>Administra credenciales, roles y accesos del sistema</p>
+        </header>
+
+        <a class="back-link" href="index.html">← Volver al sistema principal</a>
+
+        <div class="status-banner">
+            <strong>Uso exclusivo de administradores.</strong>
+            Mantén las contraseñas en un gestor seguro y rota los accesos periódicamente.
         </div>
-        
-        <div class="content">
-            <a href="index.html" class="back-link">← Volver al Sistema Principal</a>
-            
-            <div class="warning">
-                <strong>⚠️ Atención:</strong> Esta página debe ser usada solo por administradores. Asegúrese de generar hashes seguros para las contraseñas.
-            </div>
 
-            <!-- Generador de Hash -->
-            <div class="section">
-                <h2>🔑 Generar Hash de Contraseña</h2>
-                <p>Usa esta herramienta para generar hashes seguros bcrypt de las contraseñas.</p>
-                
+        <section class="actions-grid">
+            <article class="card" id="card-generate-hash">
+                <h2>🔑 Generar hash seguro</h2>
+                <p class="muted">Crea un hash bcrypt a partir de una contraseña en texto plano.</p>
                 <div class="form-group">
-                    <label for="passwordToHash">Contraseña a hashear:</label>
-                    <input type="password" id="passwordToHash" placeholder="Ingrese la contraseña">
+                    <label for="passwordToHash">Contraseña</label>
+                    <input type="password" id="passwordToHash" placeholder="Introduce la contraseña original">
                 </div>
-                
-                <button class="btn" onclick="generateHash()">Generar Hash</button>
-                
-                <div id="hashResult"></div>
-            </div>
+                <button class="btn" type="button" onclick="generateHash()">Generar hash bcrypt</button>
+                <p id="hashResult" class="feedback" aria-live="polite"></p>
+            </article>
 
-            <!-- Actualizar Usuario -->
-            <div class="section">
-                <h2>👤 Actualizar Contraseña de Usuario</h2>
-                <p>Actualiza la contraseña hasheada de un usuario existente.</p>
-                
+            <article class="card" id="card-password-reset">
+                <h2>🗝️ Actualizar contraseña</h2>
+                <p class="muted">Asigna una nueva contraseña a un usuario existente.</p>
                 <div class="form-group">
-                    <label for="username">Usuario:</label>
-                    <select id="username">
-                        <option value="">Seleccione un usuario...</option>
-                        <option value="admin">admin</option>
-                        <option value="operador">operador</option>
+                    <label for="passwordUserSelect">Usuario</label>
+                    <select id="passwordUserSelect">
+                        <option value="">Selecciona un usuario…</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
-                    <label for="newPassword">Nueva Contraseña:</label>
-                    <input type="password" id="newPassword" placeholder="Nueva contraseña">
+                    <label for="passwordUpdateValue">Nueva contraseña</label>
+                    <input type="password" id="passwordUpdateValue" placeholder="Mínimo 6 caracteres">
                 </div>
-                
-                <button class="btn" onclick="updateUserPassword()">Actualizar Contraseña</button>
-                
-                <div id="updateResult"></div>
-            </div>
+                <button class="btn" type="button" onclick="updateUserPassword()">Actualizar contraseña</button>
+                <p id="updateResult" class="feedback" aria-live="polite"></p>
+            </article>
 
-            <!-- Crear Nuevo Usuario -->
-            <div class="section">
-                <h2>➕ Crear Nuevo Usuario</h2>
-                <p>Crea un nuevo usuario en el sistema con credenciales seguras.</p>
-                
+            <article class="card" id="card-role-change">
+                <h2>🛠️ Cambiar rol de usuario</h2>
+                <p class="muted">Modifica los permisos de un usuario sin alterar su contraseña.</p>
                 <div class="form-group">
-                    <label for="newUsername">Nombre de Usuario:</label>
-                    <input type="text" id="newUsername" placeholder="ej: operador2">
+                    <label for="roleChangeUser">Usuario</label>
+                    <select id="roleChangeUser">
+                        <option value="">Selecciona un usuario…</option>
+                    </select>
                 </div>
-                
                 <div class="form-group">
-                    <label for="newUserFullName">Nombre Completo:</label>
-                    <input type="text" id="newUserFullName" placeholder="ej: Juan Pérez">
+                    <label for="roleChangeTarget">Nuevo rol</label>
+                    <select id="roleChangeTarget">
+                        <option value="">Selecciona el nuevo rol…</option>
+                    </select>
                 </div>
-                
+                <button class="btn" type="button" onclick="changeUserRole()">Actualizar rol</button>
+                <p id="roleChangeResult" class="feedback" aria-live="polite"></p>
+            </article>
+
+            <article class="card" id="card-create-user">
+                <h2>➕ Crear nuevo usuario</h2>
+                <p class="muted">Configura usuarios para operadores, consultores o nuevos administradores.</p>
                 <div class="form-group">
-                    <label for="newUserRole">Rol:</label>
+                    <label for="newUsername">Nombre de usuario</label>
+                    <input type="text" id="newUsername" placeholder="Ej: operador_norte">
+                </div>
+                <div class="form-group">
+                    <label for="newUserFullName">Nombre completo</label>
+                    <input type="text" id="newUserFullName" placeholder="Ej: Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="newUserRole">Rol</label>
                     <select id="newUserRole">
-                        <option value="">Seleccione un rol...</option>
-                        <option value="admin">Administrador</option>
-                        <option value="operador">Operador</option>
+                        <option value="">Selecciona el rol…</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
-                    <label for="newUserPassword">Contraseña:</label>
-                    <input type="password" id="newUserPassword" placeholder="Contraseña segura">
+                    <label for="newUserPassword">Contraseña inicial</label>
+                    <input type="password" id="newUserPassword" placeholder="Mínimo 6 caracteres">
                 </div>
-                
-                <button class="btn" onclick="createUser()">Crear Usuario</button>
-                
-                <div id="createUserResult"></div>
-            </div>
+                <button class="btn" type="button" onclick="createUser()">Crear usuario</button>
+                <p id="createUserResult" class="feedback" aria-live="polite"></p>
+            </article>
 
-            <!-- Lista de Usuarios -->
-            <div class="section">
-                <h2>📋 Usuarios del Sistema</h2>
-                <button class="btn" onclick="loadUsers()">Cargar Usuarios</button>
-                
-                <div id="usersList"></div>
-            </div>
+            <article class="card" id="card-verify-password">
+                <h2>🔍 Verificar contraseña</h2>
+                <p class="muted">Comprueba si una contraseña coincide con un hash registrado.</p>
+                <div class="form-group">
+                    <label for="testPassword">Contraseña</label>
+                    <input type="password" id="testPassword" placeholder="Contraseña para probar">
+                </div>
+                <div class="form-group">
+                    <label for="testHash">Hash bcrypt</label>
+                    <textarea id="testHash" rows="2" placeholder="Pega aquí el hash guardado"></textarea>
+                </div>
+                <button class="btn" type="button" onclick="verifyPassword()">Verificar coincidencia</button>
+                <p id="verifyResult" class="feedback" aria-live="polite"></p>
+            </article>
+        </section>
 
-            <!-- Herramienta de Verificación -->
-            <div class="section">
-                <h2>🔍 Verificar Contraseña</h2>
-                <p>Verifica si una contraseña coincide con un hash existente.</p>
-                
-                <div class="form-group">
-                    <label for="testPassword">Contraseña a verificar:</label>
-                    <input type="password" id="testPassword" placeholder="Contraseña">
-                </div>
-                
-                <div class="form-group">
-                    <label for="testHash">Hash a comparar:</label>
-                    <input type="text" id="testHash" placeholder="Hash bcrypt">
-                </div>
-                
-                <button class="btn" onclick="verifyPassword()">Verificar</button>
-                
-                <div id="verifyResult"></div>
+        <section class="card" id="card-users-list">
+            <div class="section-header">
+                <h2>📋 Usuarios registrados</h2>
+                <button class="btn secondary" type="button" id="refreshUsersBtn">Actualizar lista</button>
             </div>
-        </div>
-    </div>
+            <p class="muted">Los cambios de contraseña o rol se aplican de inmediato.</p>
+            <div id="usersList">
+                <p class="empty-state">No hay usuarios cargados todavía.</p>
+            </div>
+        </section>
+    </main>
 
     <script>
-        // Función para realizar llamadas API con autenticación
+        const ROLE_OPTIONS = [
+            { value: 'admin', label: 'Administrador' },
+            { value: 'operador', label: 'Operador' },
+            { value: 'consultor', label: 'Consultor (solo reportes)' }
+        ];
+
+        const SECURITY_API = 'api/security.php';
+        let cachedUsers = [];
+
+        function populateRoleSelect(selectElement, placeholderText = 'Selecciona un rol…') {
+            if (!selectElement) return;
+            selectElement.innerHTML = placeholderText ? `<option value="">${placeholderText}</option>` : '';
+            ROLE_OPTIONS.forEach(({ value, label }) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = label;
+                selectElement.appendChild(option);
+            });
+        }
+
+        function populateUserSelect(selectElement, users, placeholderText = 'Selecciona un usuario…') {
+            if (!selectElement) return;
+            selectElement.innerHTML = `<option value="">${placeholderText}</option>`;
+            users.forEach((user) => {
+                const option = document.createElement('option');
+                option.value = user.username;
+                option.textContent = user.name ? `${user.username} · ${user.name}` : user.username;
+                selectElement.appendChild(option);
+            });
+        }
+
+        function populateUserSelectors(users) {
+            populateUserSelect(document.getElementById('passwordUserSelect'), users);
+            populateUserSelect(document.getElementById('roleChangeUser'), users);
+        }
+
+        function isValidRole(role) {
+            return ROLE_OPTIONS.some((r) => r.value === role);
+        }
+
+        function formatRole(role) {
+            const match = ROLE_OPTIONS.find((item) => item.value === role);
+            return match ? match.label : role;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function showFeedback(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            element.textContent = message;
+            element.className = `feedback ${type}`;
+        }
+
         async function apiCall(endpoint, options = {}) {
             const token = localStorage.getItem('session_token');
-            
             const defaultOptions = {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
             };
-            
+
             const finalOptions = {
                 ...defaultOptions,
                 ...options,
@@ -303,237 +472,281 @@
                     ...options.headers
                 }
             };
-            
-            try {
-                const response = await fetch(endpoint, finalOptions);
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.message || 'Error en la petición');
-                }
-                
-                return data;
-            } catch (error) {
-                console.error('Error en API call:', error);
-                throw error;
+
+            const response = await fetch(endpoint, finalOptions);
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                const message = data?.message || 'Error en la petición';
+                throw new Error(message);
             }
+
+            return data;
         }
 
-        // Generar hash de contraseña
         async function generateHash() {
-            const password = document.getElementById('passwordToHash').value;
-            
+            const password = document.getElementById('passwordToHash').value.trim();
+
             if (!password) {
-                showResult('hashResult', 'Por favor ingrese una contraseña', 'error');
+                showFeedback('hashResult', 'Ingresa una contraseña para generar el hash.', 'error');
                 return;
             }
-            
+
             try {
-                const response = await apiCall('api/security.php', {
+                const response = await apiCall(SECURITY_API, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'generate_hash',
-                        password: password
+                        password
                     })
                 });
-                
-                showResult('hashResult', `Hash generado: ${response.hash}`, 'success');
+
+                showFeedback('hashResult', `Hash generado: ${response.hash}`, 'success');
             } catch (error) {
-                showResult('hashResult', `Error: ${error.message}`, 'error');
+                showFeedback('hashResult', `Error: ${error.message}`, 'error');
             }
         }
 
-        // Actualizar contraseña de usuario
         async function updateUserPassword() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('newPassword').value;
-            
+            const username = document.getElementById('passwordUserSelect').value;
+            const password = document.getElementById('passwordUpdateValue').value;
+
             if (!username || !password) {
-                showResult('updateResult', 'Seleccione un usuario e ingrese una contraseña', 'error');
+                showFeedback('updateResult', 'Selecciona un usuario e ingresa la nueva contraseña.', 'error');
                 return;
             }
-            
+
+            if (password.length < 6) {
+                showFeedback('updateResult', 'La contraseña debe tener al menos 6 caracteres.', 'error');
+                return;
+            }
+
             try {
-                const response = await apiCall('api/security.php', {
+                const response = await apiCall(SECURITY_API, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'update_password',
-                        username: username,
-                        password: password
+                        username,
+                        password
                     })
                 });
-                
-                showResult('updateResult', response.message, 'success');
-                document.getElementById('newPassword').value = '';
-                loadUsers(); // Recargar la lista
+
+                showFeedback('updateResult', response.message, 'success');
+                document.getElementById('passwordUpdateValue').value = '';
+                await loadUsers().catch((refreshError) => {
+                    console.error('No se pudo refrescar la lista de usuarios:', refreshError);
+                });
             } catch (error) {
-                showResult('updateResult', `Error: ${error.message}`, 'error');
+                showFeedback('updateResult', `Error: ${error.message}`, 'error');
             }
         }
 
-        // Crear nuevo usuario
+        async function changeUserRole() {
+            const username = document.getElementById('roleChangeUser').value;
+            const newRole = document.getElementById('roleChangeTarget').value;
+
+            if (!username || !newRole) {
+                showFeedback('roleChangeResult', 'Selecciona un usuario y el nuevo rol a asignar.', 'error');
+                return;
+            }
+
+            if (!isValidRole(newRole)) {
+                showFeedback('roleChangeResult', 'El rol seleccionado no es válido.', 'error');
+                return;
+            }
+
+            const user = cachedUsers.find((item) => item.username === username);
+            if (user && user.role === newRole) {
+                showFeedback('roleChangeResult', 'El usuario ya tiene asignado ese rol.', 'info');
+                return;
+            }
+
+            try {
+                const response = await apiCall(SECURITY_API, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'update_role',
+                        username,
+                        role: newRole
+                    })
+                });
+
+                showFeedback('roleChangeResult', response.message, 'success');
+                document.getElementById('roleChangeTarget').value = '';
+
+                await loadUsers().catch((refreshError) => {
+                    console.error('No se pudo refrescar la lista de usuarios:', refreshError);
+                });
+            } catch (error) {
+                showFeedback('roleChangeResult', `Error: ${error.message}`, 'error');
+            }
+        }
+
         async function createUser() {
             const username = document.getElementById('newUsername').value.trim();
             const fullName = document.getElementById('newUserFullName').value.trim();
             const role = document.getElementById('newUserRole').value;
             const password = document.getElementById('newUserPassword').value;
-            
+
             if (!username || !fullName || !role || !password) {
-                showResult('createUserResult', 'Todos los campos son obligatorios', 'error');
+                showFeedback('createUserResult', 'Todos los campos son obligatorios.', 'error');
                 return;
             }
-            
-            // Validar nombre de usuario (solo letras, números y guiones)
+
             if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
-                showResult('createUserResult', 'El nombre de usuario solo puede contener letras, números, guiones y guiones bajos', 'error');
+                showFeedback('createUserResult', 'El nombre de usuario solo admite letras, números, guiones y guiones bajos.', 'error');
                 return;
             }
-            
-            // Validar longitud de contraseña
+
             if (password.length < 6) {
-                showResult('createUserResult', 'La contraseña debe tener al menos 6 caracteres', 'error');
+                showFeedback('createUserResult', 'La contraseña debe tener al menos 6 caracteres.', 'error');
                 return;
             }
-            
+
+            if (!isValidRole(role)) {
+                showFeedback('createUserResult', 'Selecciona un rol válido.', 'error');
+                return;
+            }
+
             try {
-                const response = await apiCall('api/security.php', {
+                const response = await apiCall(SECURITY_API, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'create_user',
-                        username: username,
+                        username,
                         name: fullName,
-                        role: role,
-                        password: password
+                        role,
+                        password
                     })
                 });
-                
-                showResult('createUserResult', response.message, 'success');
-                
-                // Limpiar formulario
+
+                showFeedback('createUserResult', response.message, 'success');
+
                 document.getElementById('newUsername').value = '';
                 document.getElementById('newUserFullName').value = '';
                 document.getElementById('newUserRole').value = '';
                 document.getElementById('newUserPassword').value = '';
-                
-                // Recargar lista de usuarios y actualizar dropdown
-                loadUsers();
-                updateUserDropdown();
-                
-            } catch (error) {
-                showResult('createUserResult', `Error: ${error.message}`, 'error');
-            }
-        }
-        
-        // Actualizar dropdown de usuarios en la sección de actualizar contraseña
-        async function updateUserDropdown() {
-            try {
-                const response = await apiCall('api/security.php?action=list_users');
-                const select = document.getElementById('username');
-                
-                // Limpiar opciones existentes excepto la primera
-                select.innerHTML = '<option value="">Seleccione un usuario...</option>';
-                
-                // Agregar usuarios dinámicamente
-                response.users.forEach(user => {
-                    const option = document.createElement('option');
-                    option.value = user.username;
-                    option.textContent = `${user.username} (${user.name})`;
-                    select.appendChild(option);
+
+                await loadUsers().catch((refreshError) => {
+                    console.error('No se pudo refrescar la lista de usuarios:', refreshError);
                 });
-                
             } catch (error) {
-                console.error('Error actualizando dropdown:', error);
+                showFeedback('createUserResult', `Error: ${error.message}`, 'error');
             }
         }
 
-        // Cargar lista de usuarios
-        async function loadUsers() {
-            try {
-                const response = await apiCall('api/security.php?action=list_users');
-                
-                let html = '<table class="users-table">';
-                html += '<tr><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Estado</th><th>Último Login</th></tr>';
-                
-                response.users.forEach(user => {
-                    html += `<tr>
-                        <td>${user.username}</td>
-                        <td>${user.name}</td>
-                        <td>${user.role}</td>
-                        <td>${user.active ? 'Activo' : 'Inactivo'}</td>
-                        <td>${user.last_login || 'Nunca'}</td>
-                    </tr>`;
-                });
-                
-                html += '</table>';
-                document.getElementById('usersList').innerHTML = html;
-            } catch (error) {
-                showResult('usersList', `Error cargando usuarios: ${error.message}`, 'error');
-            }
-        }
-
-        // Verificar contraseña
         async function verifyPassword() {
             const password = document.getElementById('testPassword').value;
-            const hash = document.getElementById('testHash').value;
-            
+            const hash = document.getElementById('testHash').value.trim();
+
             if (!password || !hash) {
-                showResult('verifyResult', 'Ingrese tanto la contraseña como el hash', 'error');
+                showFeedback('verifyResult', 'Completa la contraseña y el hash para verificar.', 'error');
                 return;
             }
-            
+
             try {
-                const response = await apiCall('api/security.php', {
+                const response = await apiCall(SECURITY_API, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'verify_password',
-                        password: password,
-                        hash: hash
+                        password,
+                        hash
                     })
                 });
-                
-                const message = response.valid ? 
-                    'La contraseña coincide con el hash ✓' : 
-                    'La contraseña NO coincide con el hash ✗';
-                    
-                showResult('verifyResult', message, response.valid ? 'success' : 'error');
+
+                const message = response.valid
+                    ? 'La contraseña coincide con el hash registrado.'
+                    : 'La contraseña NO coincide con el hash proporcionado.';
+
+                showFeedback('verifyResult', message, response.valid ? 'success' : 'error');
             } catch (error) {
-                showResult('verifyResult', `Error: ${error.message}`, 'error');
+                showFeedback('verifyResult', `Error: ${error.message}`, 'error');
             }
         }
 
-        // Mostrar resultado
-        function showResult(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<div class="result ${type}">${message}</div>`;
+        function buildUsersTable(users) {
+            if (!Array.isArray(users) || users.length === 0) {
+                return '<p class="empty-state">No se encontraron usuarios registrados.</p>';
+            }
+
+            const rows = users.map((user) => {
+                const roleLabel = formatRole(user.role);
+                const activeLabel = user.active === false ? 'Inactivo' : 'Activo';
+                const lastLogin = user.last_login ? escapeHtml(user.last_login) : 'Nunca';
+                return `
+                    <tr>
+                        <td>${escapeHtml(user.username)}</td>
+                        <td>${escapeHtml(user.name ?? '—')}</td>
+                        <td><span class="role-tag role-${escapeHtml(user.role)}">${escapeHtml(roleLabel)}</span></td>
+                        <td>${escapeHtml(activeLabel)}</td>
+                        <td>${lastLogin}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            return `
+                <div class="table-wrapper">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Último acceso</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
         }
 
-        // Verificar autenticación al cargar
-        window.addEventListener('load', async function() {
+        async function loadUsers() {
+            const usersContainer = document.getElementById('usersList');
+            if (!usersContainer) return [];
+
+            usersContainer.innerHTML = '<p class="muted">Cargando usuarios…</p>';
+
+            const response = await apiCall(`${SECURITY_API}?action=list_users`);
+            cachedUsers = Array.isArray(response.users) ? response.users : [];
+            populateUserSelectors(cachedUsers);
+            usersContainer.innerHTML = buildUsersTable(cachedUsers);
+            return cachedUsers;
+        }
+
+        window.addEventListener('load', async () => {
+            populateRoleSelect(document.getElementById('newUserRole'), 'Selecciona el rol…');
+            populateRoleSelect(document.getElementById('roleChangeTarget'), 'Selecciona el nuevo rol…');
+
+            const refreshButton = document.getElementById('refreshUsersBtn');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', () => {
+                    loadUsers().catch(() => {});
+                });
+            }
+
             try {
                 const token = localStorage.getItem('session_token');
                 if (!token) {
-                    throw new Error('No hay token');
+                    throw new Error('No hay token de sesión.');
                 }
-                
+
                 const response = await fetch('api/auth-simple.php?action=verify', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        Authorization: `Bearer ${token}`
                     }
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (!data.success || data.user.role !== 'admin') {
                     throw new Error('No autorizado');
                 }
-                
-                console.log('Autenticación exitosa para admin');
-                
-                // Inicializar dropdown de usuarios
-                updateUserDropdown();
-                
+
+                await loadUsers();
             } catch (error) {
-                alert('Debe iniciar sesión como administrador para acceder a esta página');
+                alert('Debe iniciar sesión como administrador para acceder a esta página.');
                 window.location.href = 'login.html';
             }
         });

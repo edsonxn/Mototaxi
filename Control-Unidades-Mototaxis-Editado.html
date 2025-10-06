@@ -359,6 +359,7 @@
         input:where([type=reset]),
         input:where([type=submit]) {
             -webkit-appearance: button;
+            appearance: button;
             background-color: transparent;
             background-image: none
         }
@@ -382,6 +383,7 @@
 
         [type=search] {
             -webkit-appearance: textfield;
+            appearance: textfield;
             outline-offset: -2px
         }
 
@@ -391,6 +393,7 @@
 
         ::-webkit-file-upload-button {
             -webkit-appearance: button;
+            appearance: button;
             font: inherit
         }
 
@@ -463,7 +466,6 @@
         svg,
         video {
             display: block;
-            vertical-align: middle
         }
 
         img,
@@ -1031,7 +1033,7 @@
                             <div class="w-full md:w-64">
                                 <input
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="search-unidad" placeholder="Número de unidad (1-150)" type="number" />
+                                    id="search-unidad" placeholder="Número de unidad (1-200)" type="number" />
                             </div>
                             <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                                 id="btn-buscar" type="submit">
@@ -1895,7 +1897,7 @@
                             </label>
                             <input
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                id="numero-unidad-reporte" placeholder="Número de unidad (1-150)" type="number" min="1" max="150" />
+                                id="numero-unidad-reporte" placeholder="Número de unidad (1-200)" type="number" min="1" max="200" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -2063,8 +2065,8 @@
             const local = new Date(fecha.getTime() - offset * 60 * 1000);
             return local.toISOString().split('T')[0];
         }
-        const fechaHoy = getFechaLocalISO();
-        const TOTAL_UNIDADES = 150; // Total de unidades disponibles
+    const fechaHoy = getFechaLocalISO();
+    const TOTAL_UNIDADES = 200; // Total de unidades disponibles
 
         // Inicializar la conexión con la API (reemplaza IndexedDB)
         async function inicializarDB() {
@@ -2292,8 +2294,8 @@
         function buscarUnidad() {
             const numeroUnidad = parseInt(document.getElementById('search-unidad').value);
 
-            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 150) {
-                alert('Por favor, ingresa un número de unidad válido (1-150)');
+            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 200) {
+                alert('Por favor, ingresa un número de unidad válido (1-200)');
                 return;
             }
 
@@ -2534,8 +2536,8 @@
         async function guardarRegistro() {
             const numeroUnidad = parseInt(document.getElementById('unidad-numero').textContent);
 
-            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 150) {
-                alert('Por favor, ingresa un número de unidad válido (1-150)');
+            if (isNaN(numeroUnidad) || numeroUnidad < 1 || numeroUnidad > 200) {
+                alert('Por favor, ingresa un número de unidad válido (1-200)');
                 return;
             }
 
@@ -2685,7 +2687,7 @@
                 let unidades = [];
 
                 if (filtro === 'todas') {
-                    // Mostrar todas las unidades (1-150)
+                    // Mostrar todas las unidades (1-200)
                     for (let i = 1; i <= TOTAL_UNIDADES; i++) {
                         unidades.push(i);
                     }
@@ -3306,8 +3308,8 @@
                 return;
             }
 
-            if (numeroUnidad < 1 || numeroUnidad > 150) {
-                alert('El número de unidad debe estar entre 1 y 150');
+            if (numeroUnidad < 1 || numeroUnidad > 200) {
+                alert('El número de unidad debe estar entre 1 y 200');
                 return;
             }
 

@@ -4,6 +4,8 @@ require_once 'auth_guard.php';
 
 // Validar autenticación para todas las operaciones
 $user = requireAuth();
+$userRole = strtolower($user['role'] ?? '');
+$soloLectura = $userRole === 'consultor';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -24,6 +26,10 @@ switch ($method) {
         break;
         
     case 'POST':
+        if ($soloLectura) {
+            sendResponse(null, false, 'No autorizado: rol consultor solo permite lectura');
+        }
+
         $input = json_decode(file_get_contents('php://input'), true);
         
         if (!$input || !isset($input['nombre'])) {
@@ -55,6 +61,10 @@ switch ($method) {
         break;
         
     case 'PUT':
+        if ($soloLectura) {
+            sendResponse(null, false, 'No autorizado: rol consultor solo permite lectura');
+        }
+
         if (!isset($_GET['id'])) {
             sendResponse(null, false, 'ID requerido');
         }
@@ -96,6 +106,10 @@ switch ($method) {
         break;
         
     case 'DELETE':
+        if ($soloLectura) {
+            sendResponse(null, false, 'No autorizado: rol consultor solo permite lectura');
+        }
+
         if (!isset($_GET['id'])) {
             sendResponse(null, false, 'ID requerido');
         }

@@ -136,6 +136,88 @@ switch ($action) {
             echo json_encode(['success' => false, 'message' => 'Error guardando cambios']);
         }
         break;
+
+    case 'update_role':
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+            break;
+        }
+
+        $username = trim($input['username'] ?? '');
+        $newRole = $input['role'] ?? '';
+
+        if (empty($username) || empty($newRole)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Usuario y rol son requeridos']);
+            break;
+        }
+
+        $validRoles = ['admin', 'operador', 'consultor'];
+        if (!in_array($newRole, $validRoles, true)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Rol no válido.']);
+            break;
+        }
+
+        $users = loadUsers();
+        $targetIndex = null;
+
+        foreach ($users as $index => $existingUser) {
+            if (($existingUser['username'] ?? '') === $username) {
+                $targetIndex = $index;
+                break;
+            }
+        }
+
+        if ($targetIndex === null) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Usuario no encontrado']);
+            break;
+        }
+
+        $currentRole = $users[$targetIndex]['role'] ?? '';
+        if ($currentRole === $newRole) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'El usuario ya cuenta con el rol indicado',
+                'user' => [
+                    'username' => $users[$targetIndex]['username'],
+                    'role' => $currentRole
+                ]
+            ]);
+            break;
+        }
+
+        if ($currentRole === 'admin' && $newRole !== 'admin') {
+            $otherAdmins = array_filter($users, function ($candidate) use ($username) {
+                return ($candidate['username'] ?? '') !== $username && ($candidate['role'] ?? '') === 'admin' && ($candidate['active'] ?? true);
+            });
+
+            if (count($otherAdmins) === 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Debe permanecer al menos un administrador activo.']);
+                break;
+            }
+        }
+
+        $users[$targetIndex]['role'] = $newRole;
+        $users[$targetIndex]['updated_at'] = date('Y-m-d H:i:s');
+
+        if (saveUsers($users)) {
+            echo json_encode([
+                'success' => true,
+                'message' => "Rol actualizado correctamente",
+                'user' => [
+                    'username' => $users[$targetIndex]['username'],
+                    'role' => $users[$targetIndex]['role']
+                ]
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error al guardar los cambios de rol']);
+        }
+        break;
         
     case 'create_user':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -156,9 +238,9 @@ switch ($action) {
         }
         
         // Validar rol
-        if (!in_array($role, ['admin', 'operador'])) {
+        if (!in_array($role, ['admin', 'operador', 'consultor'])) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Rol inválido. Debe ser admin u operador']);
+            echo json_encode(['success' => false, 'message' => 'Rol inválido. Debe ser admin, operador o consultor']);
             break;
         }
         
@@ -252,7 +334,7 @@ switch ($action) {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Acción no válida. Acciones disponibles: generate_hash, verify_password, update_password, create_user, list_users'
+            'message' => 'Acción no válida. Acciones disponibles: generate_hash, verify_password, update_password, update_role, create_user, list_users'
         ]);
         break;
 }

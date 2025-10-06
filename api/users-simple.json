@@ -18,5 +18,15 @@
         "created_at": "2025-08-26 00:00:00",
         "last_login": null,
         "active": true
+    },
+    {
+        "id": 3,
+        "username": "consultor",
+        "password": "Consultor2025$",
+        "name": "Consultor",
+        "role": "consultor",
+        "created_at": "2025-10-05 00:00:00",
+        "last_login": null,
+        "active": true
     }
 ]

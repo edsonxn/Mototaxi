@@ -2,6 +2,41 @@
 // Archivo para validar autenticación en las APIs - Versión compatible
 session_start();
 
+function normalizeRoles($roles) {
+    if ($roles === null) {
+        return null;
+    }
+
+    if (!is_array($roles)) {
+        $roles = [$roles];
+    }
+
+    return array_map(function ($role) {
+        return strtolower(trim($role));
+    }, $roles);
+}
+
+function userHasRole($user, $roles) {
+    $normalizedRoles = normalizeRoles($roles);
+
+    if ($normalizedRoles === null) {
+        return true;
+    }
+
+    $userRole = strtolower($user['role'] ?? '');
+    return in_array($userRole, $normalizedRoles, true);
+}
+
+function denyAccess($message = 'Acceso denegado') {
+    http_response_code(403);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => $message
+    ]);
+    exit;
+}
+
 function validateApiAccess() {
     // Obtener token del header Authorization o parámetros
     $token = null;
@@ -39,7 +74,13 @@ function validateApiAccess() {
     return $_SESSION['user'] ?? null;
 }
 
-function requireAuth() {
-    return validateApiAccess();
+function requireAuth($allowedRoles = null) {
+    $user = validateApiAccess();
+
+    if (!userHasRole($user, $allowedRoles)) {
+        denyAccess('Acceso denegado para su rol actual');
+    }
+
+    return $user;
 }
 ?>

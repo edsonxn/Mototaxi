@@ -5,7 +5,7 @@ Sistema completo para el control y gestión de unidades de mototaxis con autenti
 ## 🚀 Características
 
 ### 📊 Gestión de Operaciones
-- **Control de Unidades**: Gestión de 150 unidades de mototaxis
+- **Control de Unidades**: Gestión de 200 unidades de mototaxis
 - **Registro de Turnos**: Control de turnos 1 y 2 con operadores asignados
 - **Cálculo Automático**: Horas trabajadas y estadísticas por turno
 - **Estados de Registro**: Completo, incompleto, sin registro
@@ -23,7 +23,7 @@ Sistema completo para el control y gestión de unidades de mototaxis con autenti
 
 ### 🔐 Sistema de Autenticación
 - **Login Seguro**: Sistema de autenticación con sesiones PHP
-- **Roles de Usuario**: Administrador y operador
+- **Roles de Usuario**: Administrador, operador y consultor
 - **Protección de API**: Todas las rutas protegidas con tokens
 - **Logout Automático**: Cierre de sesión por inactividad
 
@@ -80,13 +80,18 @@ Sistema completo para el control y gestión de unidades de mototaxis con autenti
 
 ### Administrador
 - **Usuario**: `admin`
-- **Contraseña**: `admin123`
-- **Permisos**: Acceso completo al sistema
+- **Contraseña**: `MotoTaxi2025!`
+- **Permisos**: Acceso completo al sistema (incluye administración de seguridad)
 
 ### Operador
 - **Usuario**: `operador`
-- **Contraseña**: `admin123`
-- **Permisos**: Acceso a operaciones básicas
+- **Contraseña**: `Operador2025#`
+- **Permisos**: Gestión de turnos, unidades y operadores
+
+### Consultor
+- **Usuario**: `consultor`
+- **Contraseña**: `Consultor2025$`
+- **Permisos**: Acceso de solo lectura a los reportes
 
 > ⚠️ **Importante**: Cambiar las contraseñas por defecto en un entorno de producción.
 
@@ -142,7 +147,7 @@ const API_BASE_URL = 'https://tu-dominio.com/api/';
 3. Redirección automática al panel principal
 
 ### Control de Turnos
-1. Buscar unidad por número (1-150)
+1. Buscar unidad por número (1-200)
 2. Seleccionar fecha específica
 3. Asignar operadores a turnos
 4. Registrar horas de entrada y salida
