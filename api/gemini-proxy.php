@@ -76,7 +76,7 @@ if ($systemInstruction) {
     $data["systemInstruction"] = $systemInstruction;
 }
 
-$model = "gemini-3.1-flash"; // Forzar uso de este modelo
+$model = "gemini-1.5-flash"; // Forzar uso de este modelo
 
 // Llamada a Gemini
 $url = "https://generativelanguage.googleapis.com/v1beta/models/" . $model . ":generateContent?key=" . $GEMINI_API_KEY;
