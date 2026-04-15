@@ -2224,7 +2224,13 @@
                 
                 const registrosFiltrados = data.data
                     .filter(registro => registro.fecha >= fechaLimiteStr)
-                    .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+                    .sort((a, b) => {
+                        // Ordenar por fechaCreacion (que incluye fecha y hora)
+                        // Si no existe fechaCreacion, usar fecha + hora de salida
+                        const fechaA = a.fechaCreacion || `${a.fecha} ${a.salida1 || '00:00:00'}`;
+                        const fechaB = b.fechaCreacion || `${b.fecha} ${b.salida1 || '00:00:00'}`;
+                        return new Date(fechaB) - new Date(fechaA);
+                    })
                     .slice(0, 20); // Limitar a 20 registros recientes
 
                 actualizarTablaRegistros(registrosFiltrados);

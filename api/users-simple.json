@@ -14,7 +14,7 @@
         "username": "operador",
         "password": "Operador2025#",
         "name": "Operador",
-        "role": "user",
+        "role": "operador",
         "created_at": "2025-08-26 00:00:00",
         "last_login": null,
         "active": true

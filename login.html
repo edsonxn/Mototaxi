@@ -362,9 +362,19 @@
                     localStorage.setItem('session_token', response.token);
                     localStorage.setItem('user_data', JSON.stringify(response.user));
                     
-                    // Redirigir después de 1 segundo
+                    // Debug: mostrar el rol del usuario
+                    console.log('Usuario autenticado:', response.user);
+                    console.log('Rol del usuario:', response.user?.role);
+                    
+                    // Redirigir después de 1 segundo según el rol del usuario
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        if (response.user && response.user.role === 'operador') {
+                            console.log('Redirigiendo a operador-turno.html');
+                            window.location.href = 'operador-turno.html';
+                        } else {
+                            console.log('Redirigiendo a index.html');
+                            window.location.href = 'index.html';
+                        }
                     }, 1000);
                 } else {
                     showMessage(response.message || 'Error en el login');
@@ -392,7 +402,13 @@
                         }
                     }).then(response => {
                         if (response.success) {
-                            window.location.href = 'index.html';
+                            // Redirigir según el rol del usuario
+                            const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+                            if (userData.role === 'operador') {
+                                window.location.href = 'operador-turno.html';
+                            } else {
+                                window.location.href = 'index.html';
+                            }
                         }
                     }).catch(() => {
                         // Token inválido, remover

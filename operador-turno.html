@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Turno - Operador</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header .user-info {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input:disabled {
+            background: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-end {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-end:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        .status-card.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-card h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .status-card .time-info {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .status-card .elapsed-time {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-card .unit-info {
+            font-size: 20px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c00;
+            border: 2px solid #fcc;
+        }
+
+        .message.success {
+            background: #efe;
+            color: #060;
+            border: 2px solid #cfc;
+        }
+
+        .message.info {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 2px solid #bae6fd;
+        }
+
+        .message.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fde68a;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-clock"></i> Control de Turno</h1>
+            <div class="user-info">
+                Operador: <strong id="operadorNombre">-</strong>
+            </div>
+        </div>
+
+        <div id="messageBox" class="message"></div>
+        <div id="loadingBox" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Estado del turno activo -->
+        <div id="statusCard" class="status-card">
+            <h2><i class="fas fa-play-circle"></i> Turno Activo</h2>
+            <div class="time-info">
+                Inicio: <strong id="startTime">-</strong>
+            </div>
+            <div class="elapsed-time" id="elapsedTime">00:00:00</div>
+            <div class="unit-info">
+                <i class="fas fa-motorcycle"></i> Unidad: <strong id="activeUnit">-</strong>
+            </div>
+        </div>
+
+        <!-- Formulario de control -->
+        <div class="card">
+            <!-- Lector de QR -->
+            <div id="qrReaderSection" class="form-group" style="display: none;">
+                <label>
+                    <i class="fas fa-qrcode"></i> Escanear código QR de la unidad
+                </label>
+                <div id="qr-reader" style="border-radius: 10px; overflow: hidden;"></div>
+                <p style="text-align: center; margin-top: 10px; color: #666; font-size: 14px;">
+                    Apunta la cámara al código QR de la unidad
+                </p>
+            </div>
+
+            <div class="button-group">
+                <button id="btnIniciar" class="btn btn-start" onclick="activarEscanerParaIniciar()">
+                    <i class="fas fa-play"></i> Iniciar Turno
+                </button>
+                <button id="btnFinalizar" class="btn btn-end" onclick="finalizarTurno()" style="display: none;">
+                    <i class="fas fa-stop"></i> Terminar Turno
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentShift = null;
+        let timerInterval = null;
+        let userData = null;
+        let html5QrCode = null;
+        let coordenadasActuales = null;
+
+        // Función para obtener coordenadas de ubicación
+        async function obtenerCoordenadas() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    const mensaje = 'Tu dispositivo no soporta geolocalización';
+                    showMessage(mensaje, 'error');
+                    reject(new Error(mensaje));
+                    return;
+                }
+
+                showMessage('Verificando ubicación...', 'info');
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const coordenadas = {
+                            latitud: position.coords.latitude,
+                            longitud: position.coords.longitude,
+                            precision: position.coords.accuracy
+                        };
+                        console.log('📍 Coordenadas obtenidas:', coordenadas);
+                        resolve(coordenadas);
+                    },
+                    (error) => {
+                        console.error('Error al obtener ubicación:', error);
+                        let mensaje = '';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                mensaje = 'Se requieren permisos de ubicación para continuar.\n\n' +
+                                         'Por favor, autoriza el acceso a tu ubicación cuando tu navegador lo solicite.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                mensaje = 'No se pudo determinar tu ubicación. Verifica que tengas habilitada la ubicación en tu dispositivo.';
+                                break;
+                            case error.TIMEOUT:
+                                mensaje = 'Tiempo de espera agotado. Intenta de nuevo.';
+                                break;
+                            default:
+                                mensaje = 'Error al obtener la ubicación.';
+                        }
+                        showMessage(mensaje, 'error');
+                        reject(new Error(mensaje));
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+
+        // Inicializar al cargar la página
+        window.addEventListener('load', async function() {
+            // Verificar autenticación
+            const token = localStorage.getItem('session_token');
+            const userDataStr = localStorage.getItem('user_data');
+            
+            if (!token || !userDataStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            userData = JSON.parse(userDataStr);
+            
+            // Verificar que sea operador
+            if (userData.role !== 'operador') {
+                showMessage('Acceso denegado. Esta página es solo para operadores.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            // Mostrar nombre del operador
+            document.getElementById('operadorNombre').textContent = userData.name || userData.username;
+
+            // Verificar si hay un turno activo
+            await verificarTurnoActivo();
+        });
+
+        // Función para activar el escáner cuando se hace clic en Iniciar Turno
+        function activarEscanerParaIniciar() {
+            // Ocultar botón de iniciar
+            document.getElementById('btnIniciar').style.display = 'none';
+            
+            // Mostrar sección de escáner
+            document.getElementById('qrReaderSection').style.display = 'block';
+            
+            // Iniciar escáner
+            inicializarEscaner();
+        }
+
+        // Inicializar escáner de QR
+        function inicializarEscaner() {
+            html5QrCode = new Html5Qrcode("qr-reader");
+            
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            };
+
+            html5QrCode.start(
+                { facingMode: "environment" }, // Usar cámara trasera
+                config,
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error('Error al iniciar escáner:', err);
+                showMessage('No se pudo acceder a la cámara. Verifica los permisos.', 'error');
+            });
+        }
+
+        async function onScanSuccess(decodedText, decodedResult) {
+            // Detener escáner
+            if (html5QrCode && html5QrCode.isScanning) {
+                await html5QrCode.stop();
+            }
+
+            // Buscar la unidad por identificador e iniciar turno automáticamente
+            await buscarUnidadEIniciarTurno(decodedText);
+        }
+
+        function onScanError(errorMessage) {
+            // Ignorar errores de escaneo (son muy frecuentes)
+        }
+
+        async function buscarUnidadEIniciarTurno(identificador) {
+            try {
+                showLoading(true);
+                
+                // Buscar la unidad en la base de datos
+                const response = await apiCall(`unidades.php?action=list`);
+                
+                if (!response.success) {
+                    throw new Error('Error al buscar unidad');
+                }
+
+                // Buscar la unidad que tenga ese identificador
+                const unidad = response.data.find(u => u.identificador === identificador);
+                
+                if (!unidad) {
+                    showMessage('No se encontró una unidad con ese código QR', 'error');
+                    // Reiniciar escáner
+                    document.getElementById('btnIniciar').style.display = 'block';
+                    document.getElementById('qrReaderSection').style.display = 'none';
+                    return;
+                }
+
+                showMessage('Unidad identificada: ' + unidad.numero, 'success');
+                
+                // Obtener ubicación antes de iniciar turno (REQUERIDO)
+                let coordenadas;
+                try {
+                    coordenadas = await obtenerCoordenadas();
+                    console.log('✅ Ubicación obtenida');
+                } catch (error) {
+                    // Si no se otorgan permisos, no se puede continuar
+                    console.error('❌ Se requieren permisos de ubicación:', error.message);
+                    showMessage('No se puede iniciar turno sin autorizar la ubicación. Por favor, recarga la página y autoriza cuando se solicite.', 'error');
+                    // Reiniciar botones para que pueda intentar de nuevo
+                    document.getElementById('btnIniciar').style.display = 'block';
+                    document.getElementById('qrReaderSection').style.display = 'none';
+                    return;
+                }
+                
+                // Iniciar turno automáticamente con coordenadas
+                await iniciarTurnoConUnidad(unidad.numero, coordenadas);
+                
+            } catch (error) {
+                console.error('Error al buscar unidad:', error);
+                showMessage('Error al buscar la unidad: ' + error.message, 'error');
+                // Mostrar botón de iniciar de nuevo
+                document.getElementById('btnIniciar').style.display = 'block';
+                document.getElementById('qrReaderSection').style.display = 'none';
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function apiCall(endpoint, options = {}) {
+            const token = localStorage.getItem('session_token');
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            const response = await fetch(`api/${endpoint}`, {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...options.headers
+                }
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Error en la petición');
+            }
+
+            return data;
+        }
+
+        async function verificarTurnoActivo() {
+            try {
+                showLoading(true);
+                const response = await apiCall('turnos.php?action=get_active');
+                
+                if (response.success && response.turno) {
+                    currentShift = response.turno;
+                    mostrarTurnoActivo();
+                } else {
+                    mostrarFormularioInicio();
+                }
+            } catch (error) {
+                console.error('Error al verificar turno:', error);
+                mostrarFormularioInicio();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function iniciarTurnoConUnidad(unidad, coordenadas = null) {
+            try {
+                showLoading(true);
+                
+                const requestData = {
+                    action: 'iniciar',
+                    unidad: unidad
+                };
+                
+                // Agregar coordenadas si están disponibles
+                if (coordenadas) {
+                    requestData.coordenadas = coordenadas;
+                    console.log('📍 Enviando coordenadas de inicio:', coordenadas);
+                }
+                
+                const response = await apiCall('turnos.php', {
+                    method: 'POST',
+                    body: JSON.stringify(requestData)
+                });
+
+                if (response.success) {
+                    currentShift = response.turno;
+                    
+                    let mensaje = '¡Turno iniciado exitosamente!';
+                    if (coordenadas) {
+                        mensaje += ` (Ubicación registrada)`;
+                    }
+                    showMessage(mensaje, 'success');
+                    
+                    setTimeout(() => {
+                        mostrarTurnoActivo();
+                    }, 1000);
+                } else {
+                    showMessage(response.message || 'Error al iniciar turno', 'error');
+                    // Mostrar botón de iniciar de nuevo
+                    document.getElementById('btnIniciar').style.display = 'block';
+                    document.getElementById('qrReaderSection').style.display = 'none';
+                }
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+                // Mostrar botón de iniciar de nuevo
+                document.getElementById('btnIniciar').style.display = 'block';
+                document.getElementById('qrReaderSection').style.display = 'none';
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function finalizarTurno() {
+            if (!confirm('¿Estás seguro de que deseas finalizar tu turno?')) {
+                return;
+            }
+
+            try {
+                showLoading(true);
+                
+                // Obtener ubicación antes de finalizar (REQUERIDO)
+                let coordenadas;
+                try {
+                    coordenadas = await obtenerCoordenadas();
+                    console.log('✅ Ubicación de fin obtenida');
+                } catch (error) {
+                    // Si no se otorgan permisos, no se puede continuar
+                    console.error('❌ Se requieren permisos de ubicación:', error.message);
+                    showMessage('No se puede finalizar turno sin autorizar la ubicación. Por favor, recarga la página y autoriza cuando se solicite.', 'error');
+                    showLoading(false);
+                    return;
+                }
+                
+                await finalizarTurnoConCoordenadas(coordenadas);
+                
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function finalizarTurnoConCoordenadas(coordenadas) {
+            try {
+                showLoading(true);
+                
+                const requestData = {
+                    action: 'finalizar',
+                    turno_id: currentShift.id,
+                    coordenadas: coordenadas
+                };
+                
+                console.log('📍 Enviando coordenadas de fin:', coordenadas);
+                
+                const response = await apiCall('turnos.php', {
+                    method: 'POST',
+                    body: JSON.stringify(requestData)
+                });
+
+                if (response.success) {
+                    showMessage('¡Turno finalizado exitosamente!', 'success');
+                    detenerContador();
+                    currentShift = null;
+                    setTimeout(() => {
+                        mostrarFormularioInicio();
+                    }, 1500);
+                } else {
+                    showMessage(response.message || 'Error al finalizar turno', 'error');
+                }
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function mostrarTurnoActivo() {
+            // Mostrar tarjeta de estado
+            document.getElementById('statusCard').classList.add('active');
+            
+            // Actualizar información
+            const startDate = new Date(currentShift.fecha_inicio);
+            document.getElementById('startTime').textContent = formatDateTime(startDate);
+            document.getElementById('activeUnit').textContent = currentShift.unidad;
+            
+            // Ocultar sección de escáner
+            document.getElementById('qrReaderSection').style.display = 'none';
+            
+            // Ocultar botón de inicio y mostrar botón de finalizar
+            document.getElementById('btnIniciar').style.display = 'none';
+            document.getElementById('btnFinalizar').style.display = 'inline-block';
+            
+            // Detener escáner si está activo
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop();
+            }
+            
+            // Iniciar contador
+            iniciarContador(startDate);
+        }
+
+        function mostrarFormularioInicio() {
+            // Ocultar tarjeta de estado
+            document.getElementById('statusCard').classList.remove('active');
+            
+            // Ocultar sección de escáner
+            document.getElementById('qrReaderSection').style.display = 'none';
+            
+            // Mostrar botón de iniciar y ocultar botón de finalizar
+            document.getElementById('btnIniciar').style.display = 'inline-block';
+            document.getElementById('btnFinalizar').style.display = 'none';
+            
+            // Detener escáner si está activo
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop();
+            }
+            
+            // Detener contador
+            detenerContador();
+        }
+
+        function iniciarContador(startDate) {
+            // Limpiar intervalo anterior si existe
+            detenerContador();
+            
+            // Actualizar inmediatamente
+            actualizarContador(startDate);
+            
+            // Actualizar cada segundo
+            timerInterval = setInterval(() => {
+                actualizarContador(startDate);
+            }, 1000);
+        }
+
+        function detenerContador() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function actualizarContador(startDate) {
+            const now = new Date();
+            const elapsed = Math.floor((now - startDate) / 1000); // segundos transcurridos
+            
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            
+            const formatted = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            document.getElementById('elapsedTime').textContent = formatted;
+        }
+
+        function formatDateTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        function showMessage(message, type = 'info') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = `message ${type} show`;
+            
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoading(show) {
+            const loadingBox = document.getElementById('loadingBox');
+            if (show) {
+                loadingBox.classList.add('show');
+            } else {
+                loadingBox.classList.remove('show');
+            }
+        }
+
+        function logout() {
+            if (currentShift) {
+                if (!confirm('Tienes un turno activo. ¿Estás seguro de que deseas cerrar sesión sin finalizarlo?')) {
+                    return;
+                }
+            }
+            
+            localStorage.removeItem('session_token');
+            localStorage.removeItem('user_data');
+            window.location.href = 'login.html';
+        }
+
+        // Limpiar intervalo al salir de la página
+        window.addEventListener('beforeunload', function() {
+            detenerContador();
+        });
+    </script>
+</body>
+</html>
